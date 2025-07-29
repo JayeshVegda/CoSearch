@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create axios instance with base configuration
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8484/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD ? 'https://cosearch-backend.onrender.com/api' : 'http://localhost:8484/api'),
   timeout: 10000, // 10 seconds
   headers: {
     'Content-Type': 'application/json',
