@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   Modal, 
   Stepper, 
@@ -8,10 +8,8 @@ import {
   Stack, 
   Group, 
   Paper,
-  Image,
   List,
   ThemeIcon,
-  CheckIcon,
   Alert,
   Box
 } from '@mantine/core';
@@ -19,16 +17,15 @@ import { IconCheck, IconArrowRight, IconArrowLeft, IconX } from '@tabler/icons-r
 
 const OnboardingSlider = ({ opened, onClose }) => {
   const [active, setActive] = useState(0);
-  const [completed, setCompleted] = useState(false);
 
   const steps = [
     {
-      title: 'Welcome to CoSearch',
+      title: 'Getting Started',
       description: 'Let\'s set up your browser for the best experience',
       content: (
         <Stack gap="md">
           <Title order={3} ta="center" c="blue.6">
-            🎉 Welcome to CoSearch!
+            🚀 Let's Get You Started
           </Title>
           <Text size="lg" ta="center" c="dimmed">
             CoSearch is your personalized search aggregator that lets you search across multiple sites simultaneously.
@@ -43,7 +40,7 @@ const OnboardingSlider = ({ opened, onClose }) => {
               center
               icon={
                 <ThemeIcon color="green" size={24} radius="xl">
-                  <CheckIcon size={16} />
+                  <IconCheck size={16} />
                 </ThemeIcon>
               }
             >
@@ -128,11 +125,7 @@ const OnboardingSlider = ({ opened, onClose }) => {
             You can start searching across multiple sites simultaneously!
           </Alert>
 
-          <Paper p="md" withBorder bg="blue.0">
-            <Text size="sm" c="blue.7">
-              <strong>Tip:</strong> You can always access this setup guide again from the settings menu if needed.
-            </Text>
-          </Paper>
+
         </Stack>
       )
     }
@@ -140,10 +133,8 @@ const OnboardingSlider = ({ opened, onClose }) => {
 
   const nextStep = () => {
     if (active === steps.length - 1) {
-      setCompleted(true);
+      // Let the parent component handle completion
       onClose();
-      // Mark onboarding as completed in localStorage
-      localStorage.setItem('onboardingCompleted', 'true');
     } else {
       setActive((current) => current + 1);
     }
@@ -154,10 +145,7 @@ const OnboardingSlider = ({ opened, onClose }) => {
   };
 
   const handleClose = () => {
-    if (active === 0) {
-      // If user closes on first step, mark as completed anyway
-      localStorage.setItem('onboardingCompleted', 'true');
-    }
+    // Let the parent component handle completion
     onClose();
   };
 
@@ -166,7 +154,7 @@ const OnboardingSlider = ({ opened, onClose }) => {
       opened={opened}
       onClose={handleClose}
       size="lg"
-      title="Welcome to CoSearch"
+      title="Setup Guide"
       closeOnClickOutside={false}
       closeOnEscape={false}
       withCloseButton={active === 0}
@@ -185,7 +173,7 @@ const OnboardingSlider = ({ opened, onClose }) => {
             </Stepper.Step>
           ))}
         </Stepper>
-
+        
         <Group justify="space-between">
           <Button
             variant="default"

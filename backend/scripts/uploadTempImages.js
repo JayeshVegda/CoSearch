@@ -1,8 +1,10 @@
 const fs = require('fs');
 const path = require('path');
-const cloudinary = require('../utils/cloudinaryConfig');
-const UserPreferences = require('../models/userPreferencesModel');
+
 const mongoose = require('mongoose');
+
+const UserPreferences = require('../models/userPreferencesModel');
+const cloudinary = require('../utils/cloudinaryConfig');
 require('dotenv').config();
 
 // 1. Connect to MongoDB
@@ -15,8 +17,8 @@ async function uploadImage(localPath, publicId) {
     folder: 'coshot_icons', // optional: organize in a folder
     overwrite: true,
     transformation: [
-      { width: 48, height: 48, crop: 'fill' } // Resize and crop to 48x48
-    ]
+      { width: 48, height: 48, crop: 'fill' }, // Resize and crop to 48x48
+    ],
   });
 }
 
@@ -67,4 +69,4 @@ async function main() {
   console.log('Done!');
 }
 
-main(); 
+main();

@@ -7,13 +7,13 @@ const getCleanupStats = async (req, res) => {
     const stats = await cleanupService.getCleanupStats();
     res.json({
       success: true,
-      data: stats
+      data: stats,
     });
   } catch (error) {
     logger.error('Error getting cleanup stats:', error);
     res.status(500).json({
       success: false,
-      error: 'Failed to get cleanup statistics'
+      error: 'Failed to get cleanup statistics',
     });
   }
 };
@@ -24,13 +24,13 @@ const triggerCleanup = async (req, res) => {
     await cleanupService.manualCleanup();
     res.json({
       success: true,
-      message: 'Manual cleanup completed successfully'
+      message: 'Manual cleanup completed successfully',
     });
   } catch (error) {
     logger.error('Error during manual cleanup:', error);
     res.status(500).json({
       success: false,
-      error: 'Failed to trigger cleanup'
+      error: 'Failed to trigger cleanup',
     });
   }
 };
@@ -41,13 +41,13 @@ const startCleanupService = async (req, res) => {
     cleanupService.start();
     res.json({
       success: true,
-      message: 'Cleanup service started successfully'
+      message: 'Cleanup service started successfully',
     });
   } catch (error) {
     logger.error('Error starting cleanup service:', error);
     res.status(500).json({
       success: false,
-      error: 'Failed to start cleanup service'
+      error: 'Failed to start cleanup service',
     });
   }
 };
@@ -58,13 +58,13 @@ const stopCleanupService = async (req, res) => {
     cleanupService.stop();
     res.json({
       success: true,
-      message: 'Cleanup service stopped successfully'
+      message: 'Cleanup service stopped successfully',
     });
   } catch (error) {
     logger.error('Error stopping cleanup service:', error);
     res.status(500).json({
       success: false,
-      error: 'Failed to stop cleanup service'
+      error: 'Failed to stop cleanup service',
     });
   }
 };
@@ -79,14 +79,14 @@ const getServiceStatus = async (req, res) => {
         isRunning: cleanupService.isRunning,
         inactivityDays: cleanupService.INACTIVITY_DAYS,
         cleanupInterval: cleanupService.CLEANUP_INTERVAL,
-        stats
-      }
+        stats,
+      },
     });
   } catch (error) {
     logger.error('Error getting service status:', error);
     res.status(500).json({
       success: false,
-      error: 'Failed to get service status'
+      error: 'Failed to get service status',
     });
   }
 };
@@ -96,5 +96,5 @@ module.exports = {
   triggerCleanup,
   startCleanupService,
   stopCleanupService,
-  getServiceStatus
-}; 
+  getServiceStatus,
+};

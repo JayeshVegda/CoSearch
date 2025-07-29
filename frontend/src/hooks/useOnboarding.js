@@ -1,35 +1,26 @@
 import { useState, useEffect } from 'react';
 
 export const useOnboarding = () => {
-  const [showOnboarding, setShowOnboarding] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Check if onboarding has been completed
     const onboardingCompleted = localStorage.getItem('onboardingCompleted');
     
-    if (!onboardingCompleted) {
-      // First time user - show onboarding
-      setShowOnboarding(true);
-    }
+    console.log('Onboarding check:', { onboardingCompleted });
     
     setIsLoading(false);
   }, []);
 
   const completeOnboarding = () => {
-    setShowOnboarding(false);
+    console.log('Completing onboarding');
     localStorage.setItem('onboardingCompleted', 'true');
-  };
-
-  const resetOnboarding = () => {
-    localStorage.removeItem('onboardingCompleted');
-    setShowOnboarding(true);
+    // Force a re-render by dispatching a custom event
+    window.dispatchEvent(new CustomEvent('onboardingCompleted'));
   };
 
   return {
-    showOnboarding,
     isLoading,
-    completeOnboarding,
-    resetOnboarding
+    completeOnboarding
   };
 }; 

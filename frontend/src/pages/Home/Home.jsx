@@ -11,21 +11,11 @@ import SiteTiles from '../../components/category/SiteTiles';
 import OnboardingSlider from '../../components/onboarding/OnboardingSlider';
 import { useOnboarding } from '../../hooks/useOnboarding';
 import { useUserInitialization } from '../../hooks/useUserInitialization';
+import { debugOnboardingState } from '../../utils/onboardingUtils';
+import { useCategoryList } from '../../components/category/CategoryBox.controller';
+import { getOrCreateUserId } from '../../utils/getOrCreateUserId';
 
-// Local data storage
-const getLocalCategories = () => {
-  const saved = localStorage.getItem('categories');
-  return saved ? JSON.parse(saved) : [];
-};
 
-const getLocalSites = (categoryName) => {
-  const saved = localStorage.getItem(`sites_${categoryName}`);
-  return saved ? JSON.parse(saved) : [];
-};
-
-const saveLocalSites = (categoryName, sites) => {
-  localStorage.setItem(`sites_${categoryName}`, JSON.stringify(sites));
-};
 
 function Home() {
     console.log('Home component rendering...');
@@ -40,13 +30,16 @@ function Home() {
     const [searchResults, setSearchResults] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState(null);
-    const [categories, setCategories] = useState(getLocalCategories());
+    
+    // Get categories from API
+    const localUserId = getOrCreateUserId();
+    const { data: categories = [], isLoading: categoriesLoading } = useCategoryList(localUserId);
     
     // User initialization
     const { userId, isNewUser, isLoading: userLoading, error: userError } = useUserInitialization();
     
     // Onboarding state
-    const { showOnboarding, isLoading: onboardingLoading, completeOnboarding } = useOnboarding();
+    const { isLoading: onboardingLoading, completeOnboarding } = useOnboarding();
     
     // Form hook
     const form = useForm({
@@ -56,49 +49,47 @@ function Home() {
         }
     });
     
-    // Effect hooks
-    useEffect(() => {
-      const handleResetOnboarding = () => {
-        // Force re-render by updating localStorage
-        localStorage.removeItem('onboardingCompleted');
-        window.location.reload(); // Simple way to trigger onboarding again
-      };
-      
-      window.addEventListener('resetOnboarding', handleResetOnboarding);
-      
-      return () => {
-        window.removeEventListener('resetOnboarding', handleResetOnboarding);
-      };
-    }, []);
 
-    // Listen for settings changes to refresh local data
-    useEffect(() => {
-      const handleSettingsChange = (event) => {
-        console.log('Home component received settings change event:', event.detail);
-        
-        // If it's a data reset or import, refresh the local categories
-        if (event.detail.type === 'dataReset' || event.detail.type === 'dataImported') {
-          console.log('Home component refreshing local categories due to reset/import');
-          // Force a re-render by updating the categories state
-          setCategories(getLocalCategories());
-        }
-      };
 
-      window.addEventListener('settingsChanged', handleSettingsChange);
-      return () => window.removeEventListener('settingsChanged', handleSettingsChange);
-    }, []);
+
     
     // Load first category on mount
     useEffect(() => {
+        console.log('Categories loaded:', categories, 'Selected category:', selectedCategory);
         if (categories.length > 0 && !selectedCategory) {
+            console.log('Setting first category as selected:', categories[0]);
             setSelectedCategory(categories[0]);
         }
     }, [categories, selectedCategory]);
+
+    // Listen for onboarding completion
+    useEffect(() => {
+        const handleOnboardingCompleted = () => {
+            console.log('Home: Onboarding completed, state will update automatically');
+            // The useUserInitialization hook will handle updating isNewUser state
+        };
+
+        window.addEventListener('onboardingCompleted', handleOnboardingCompleted);
+        return () => window.removeEventListener('onboardingCompleted', handleOnboardingCompleted);
+    }, []);
     
-    console.log('Home component state:', { isDark, categories, selectedCategory, showOnboarding, userId, isNewUser, userLoading });
+    console.log('Home component state:', { 
+        isDark, 
+        categories: categories.length, 
+        selectedCategory, 
+        userId, 
+        isNewUser, 
+        userLoading, 
+        categoriesLoading,
+        onboardingLoading 
+    });
+    
+    // Debug onboarding state
+    debugOnboardingState();
 
     // Event handlers
     const handleCategoryChange = (value) => {
+        console.log('Category changed to:', value);
         setSelectedCategory(value);
         form.setFieldValue('category', value);
         setSearchResults([]);
@@ -112,16 +103,10 @@ function Home() {
     const handleSearch = (query) => {
         if (!selectedCategory) return;
 
-        const categoryName = selectedCategory;
-        const sites = getLocalSites(categoryName);
-        
-        // Simple search simulation
-        const results = sites.filter(site => 
-            site.name.toLowerCase().includes(query.toLowerCase()) ||
-            site.url.toLowerCase().includes(query.toLowerCase())
-        );
-        
-        setSearchResults(results);
+        // For now, we'll use a simple search simulation
+        // In the future, this could be enhanced to search through the API
+        console.log('Searching for:', query, 'in category:', selectedCategory);
+        setSearchResults([]);
     };
 
     const handleFormSubmit = (values) => {
@@ -151,7 +136,7 @@ function Home() {
     console.log('Home component rendering JSX...');
     
     // Render loading state
-    if (userLoading) {
+    if (userLoading || categoriesLoading) {
         return (
             <Box style={{ 
                 display: 'flex', 
@@ -162,7 +147,7 @@ function Home() {
             }}>
                 <Stack align="center" spacing="md">
                     <Loader size="lg" />
-                    <div>Initializing your experience...</div>
+                    <div>{userLoading ? 'Initializing your experience...' : 'Loading categories...'}</div>
                 </Stack>
             </Box>
         );
@@ -213,7 +198,6 @@ function Home() {
                         onQueryChange={handleQueryChange}
                         selectedCategory={selectedCategory}
                         onSearch={handleSearch}
-                        categories={categories}
                     />
                 </form>
                 <div style={{
@@ -225,18 +209,26 @@ function Home() {
                     padding: '0.5rem 0',
                     position: 'relative',
                 }}>
-                    <SiteTiles 
-                        selectedCategory={selectedCategory}
-                        categories={categories}
-                        setCategories={setCategories}
-                    />
+                    {selectedCategory && (
+                        <SiteTiles 
+                            selectedCategory={selectedCategory}
+                            isLoading={categoriesLoading}
+                        />
+                    )}
+                    {!selectedCategory && categories.length > 0 && (
+                        <div style={{ textAlign: 'center', color: isDark ? theme.colors.gray[4] : theme.colors.gray[6] }}>
+                            Select a category to view sites
+                        </div>
+                    )}
                 </div>
             </div>
             <SettingsButton />
             
-            {/* Onboarding Slider - Show for new users or when manually triggered */}
+
+            
+            {/* Onboarding Slider - Show only for new users */}
             <OnboardingSlider 
-                opened={(isNewUser || showOnboarding) && !onboardingLoading}
+                opened={isNewUser && !onboardingLoading}
                 onClose={completeOnboarding}
             />
         </Stack>

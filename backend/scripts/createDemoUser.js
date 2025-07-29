@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
-const UserPreferences = require('../models/userPreferencesModel');
+
 const getDefaultUserData = require('../init/data');
+const UserPreferences = require('../models/userPreferencesModel');
 require('dotenv').config();
 
 async function main() {
@@ -51,4 +52,4 @@ async function main() {
   mongoose.disconnect();
 }
 
-main(); 
+main();

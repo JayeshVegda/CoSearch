@@ -47,7 +47,7 @@ class CleanupService {
 
       // Find and delete inactive users
       const result = await UserPreferences.deleteMany({
-        lastActivity: { $lt: cutoffDate }
+        lastActivity: { $lt: cutoffDate },
       });
 
       logger.info(`Cleanup completed. Deleted ${result.deletedCount} inactive user(s)`);
@@ -55,11 +55,10 @@ class CleanupService {
       // Log additional statistics
       const totalUsers = await UserPreferences.countDocuments();
       const activeUsers = await UserPreferences.countDocuments({
-        lastActivity: { $gte: cutoffDate }
+        lastActivity: { $gte: cutoffDate },
       });
 
       logger.info(`Database statistics: Total users: ${totalUsers}, Active users: ${activeUsers}`);
-
     } catch (error) {
       logger.error('Error during cleanup:', error);
     }
@@ -70,11 +69,11 @@ class CleanupService {
     try {
       await UserPreferences.findOneAndUpdate(
         { userId },
-        { 
+        {
           lastActivity: new Date(),
-          $setOnInsert: { engine: [] } // Provide default engine array for new documents
+          $setOnInsert: { engine: [] }, // Provide default engine array for new documents
         },
-        { upsert: true }
+        { upsert: true },
       );
     } catch (error) {
       logger.error(`Error updating activity for user ${userId}:`, error);
@@ -95,10 +94,10 @@ class CleanupService {
 
       const totalUsers = await UserPreferences.countDocuments();
       const activeUsers = await UserPreferences.countDocuments({
-        lastActivity: { $gte: cutoffDate }
+        lastActivity: { $gte: cutoffDate },
       });
       const inactiveUsers = await UserPreferences.countDocuments({
-        lastActivity: { $lt: cutoffDate }
+        lastActivity: { $lt: cutoffDate },
       });
 
       return {
@@ -106,7 +105,7 @@ class CleanupService {
         activeUsers,
         inactiveUsers,
         inactivityDays: this.INACTIVITY_DAYS,
-        nextCleanup: new Date(Date.now() + this.CLEANUP_INTERVAL)
+        nextCleanup: new Date(Date.now() + this.CLEANUP_INTERVAL),
       };
     } catch (error) {
       logger.error('Error getting cleanup stats:', error);
@@ -115,4 +114,4 @@ class CleanupService {
   }
 }
 
-module.exports = new CleanupService(); 
+module.exports = new CleanupService();

@@ -3,81 +3,53 @@
  * Catches JavaScript errors anywhere in the child component tree and displays a fallback UI
  */
 import React from 'react';
+import { Alert, Button, Container, Stack, Text, Title } from '@mantine/core';
+import { IconAlertTriangle, IconRefresh } from '@tabler/icons-react';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { hasError: false, error: null, errorInfo: null };
+    this.state = { hasError: false, error: null };
   }
 
   static getDerivedStateFromError(error) {
-    return { hasError: true };
+    return { hasError: true, error };
   }
 
   componentDidCatch(error, errorInfo) {
     console.error('Error caught by boundary:', error, errorInfo);
-    this.setState({
-      error: error,
-      errorInfo: errorInfo
-    });
   }
+
+  handleReset = () => {
+    this.setState({ hasError: false, error: null });
+  };
 
   render() {
     if (this.state.hasError) {
       return (
-        <div
-          style={{
-            height: '100vh',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '2rem',
-            backgroundColor: '#f8f9fa',
-            fontFamily: 'Montserrat, system-ui, Avenir, Helvetica, Arial, sans-serif',
-            flexDirection: 'column',
-            gap: '1rem'
-          }}
-        >
-          <h1 style={{ color: '#e53e3e', margin: 0, fontSize: '1.5rem', fontWeight: 700 }}>
-            Something went wrong
-          </h1>
-          <p style={{ color: '#718096', textAlign: 'center', margin: 0 }}>
-            {this.state.error?.message || 'An unexpected error occurred'}
-          </p>
-          <button 
-            onClick={() => window.location.reload()}
-            style={{
-              padding: '0.75rem 1.5rem',
-              backgroundColor: '#3182ce',
-              color: 'white',
-              border: 'none',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              fontSize: '1rem',
-              fontWeight: 500
-            }}
-          >
-            Reload Page
-          </button>
-          {this.state.error && (
-            <div
-              style={{
-                maxWidth: '600px',
-                maxHeight: '200px',
-                overflow: 'auto',
-                backgroundColor: '#f1f3f4',
-                padding: '1rem',
-                borderRadius: '8px',
-                fontSize: '12px',
-                fontFamily: 'monospace',
-                marginTop: '1rem'
-              }}
+        <Container size="sm" py="xl">
+          <Stack align="center" spacing="lg">
+            <IconAlertTriangle size={48} color="red" />
+            <Title order={2} color="red">
+              Something went wrong
+            </Title>
+            <Text color="dimmed" align="center">
+              {this.state.error?.message || 'An unexpected error occurred'}
+            </Text>
+            <Alert color="red" variant="light">
+              <Text size="sm">
+                Please try refreshing the page or contact support if the problem persists.
+              </Text>
+            </Alert>
+            <Button 
+              leftSection={<IconRefresh size={16} />}
+              onClick={this.handleReset}
+              variant="light"
             >
-              <p style={{ fontWeight: 600, margin: '0 0 0.5rem 0' }}>Error Details:</p>
-              <p style={{ margin: 0 }}>{this.state.error.toString()}</p>
-            </div>
-          )}
-        </div>
+              Try Again
+            </Button>
+          </Stack>
+        </Container>
       );
     }
 

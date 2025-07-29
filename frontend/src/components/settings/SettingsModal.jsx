@@ -179,16 +179,7 @@ function SettingsModal({ opened, onClose, categoryList, isLoading, error, refetc
     }
   };
 
-  // Onboarding reset functionality
-  const handleResetOnboarding = () => {
-    localStorage.removeItem('onboardingCompleted');
-    // Dispatch event to trigger onboarding
-    const onboardingEvent = new CustomEvent('resetOnboarding', {
-      detail: { timestamp: Date.now() }
-    });
-    window.dispatchEvent(onboardingEvent);
-    onClose(); // Close settings modal
-  };
+
 
   const handleAddCategorySubmit = async () => {
     setAddLoading(true);

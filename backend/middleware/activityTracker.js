@@ -4,7 +4,7 @@ const activityTracker = async (req, res, next) => {
   try {
     // Extract userId from request
     let userId = null;
-    
+
     // Try to get userId from different possible sources
     if (req.params.userId) {
       userId = req.params.userId;
@@ -27,4 +27,4 @@ const activityTracker = async (req, res, next) => {
   }
 };
 
-module.exports = activityTracker; 
+module.exports = activityTracker;

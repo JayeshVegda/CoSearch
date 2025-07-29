@@ -4,24 +4,24 @@ const Joi = require('joi');
 const schemas = {
   // User registration
   register: Joi.object({
-    userId: Joi.string().min(10).max(50).required()
+    userId: Joi.string().min(10).max(50).required(),
   }),
 
   // Search request
   search: Joi.object({
     userId: Joi.string().min(10).max(50).required(),
-    categoryName: Joi.string().min(1).max(100).required()
+    categoryName: Joi.string().min(1).max(100).required(),
   }),
 
   // Category operations
   addCategory: Joi.object({
     categoryName: Joi.string().min(1).max(15).pattern(/^[a-zA-Z0-9\s\-_]+$/).required(),
-    description: Joi.string().min(1).max(200).optional().default('')
+    description: Joi.string().min(1).max(200).optional().default(''),
   }),
 
   editCategory: Joi.object({
     newCategoryName: Joi.string().min(1).max(15).pattern(/^[a-zA-Z0-9\s\-_]+$/).optional(),
-    newDescription: Joi.string().min(1).max(200).optional()
+    newDescription: Joi.string().min(1).max(200).optional(),
   }),
 
   // URL operations
@@ -30,9 +30,9 @@ const schemas = {
     siteUrl: Joi.string().uri().required(),
     icon: Joi.object({
       public_id: Joi.string().optional(),
-      url: Joi.string().uri().optional()
+      url: Joi.string().uri().optional(),
     }).optional(),
-    isChecked: Joi.boolean().default(true)
+    isChecked: Joi.boolean().default(true),
   }),
 
   editUrl: Joi.object({
@@ -40,10 +40,10 @@ const schemas = {
     siteUrl: Joi.string().uri().optional(),
     icon: Joi.object({
       public_id: Joi.string().optional(),
-      url: Joi.string().uri().optional()
+      url: Joi.string().uri().optional(),
     }).optional(),
-    isChecked: Joi.boolean().optional()
-  })
+    isChecked: Joi.boolean().optional(),
+  }),
 };
 
 // Validation middleware factory
@@ -58,7 +58,7 @@ const validate = (schemaName) => {
     if (error) {
       return res.status(400).json({
         error: 'Validation failed',
-        details: error.details.map(detail => detail.message)
+        details: error.details.map(detail => detail.message),
       });
     }
 
@@ -75,7 +75,7 @@ const validateParams = (paramSchema) => {
     if (error) {
       return res.status(400).json({
         error: 'Invalid parameters',
-        details: error.details.map(detail => detail.message)
+        details: error.details.map(detail => detail.message),
       });
     }
     next();
@@ -85,23 +85,23 @@ const validateParams = (paramSchema) => {
 // Common parameter schemas
 const paramSchemas = {
   userId: Joi.object({
-    userId: Joi.string().min(10).max(50).required()
+    userId: Joi.string().min(10).max(50).required(),
   }),
-  
+
   category: Joi.object({
     userId: Joi.string().min(10).max(50).required(),
-    catName: Joi.string().min(1).max(15).required()
+    catName: Joi.string().min(1).max(15).required(),
   }),
-  
+
   url: Joi.object({
     userId: Joi.string().min(10).max(50).required(),
     catName: Joi.string().min(1).max(15).required(),
-    siteName: Joi.string().min(1).max(20).required()
-  })
+    siteName: Joi.string().min(1).max(20).required(),
+  }),
 };
 
 module.exports = {
   validate,
   validateParams,
-  paramSchemas
-}; 
+  paramSchemas,
+};

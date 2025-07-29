@@ -1,16 +1,18 @@
 require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
 const compression = require('compression');
+const cors = require('cors');
+const express = require('express');
 const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
 const mongoose = require('mongoose');
-const userRouter = require('./router/userRoute');
-const settingRoute = require('./router/settingRoute');
-const cleanupRoute = require('./router/cleanupRoute');
-const adminRoute = require('./router/adminRoute');
-const { requestLogger, errorLogger, performanceLogger, securityLogger, logger } = require('./middleware/logging');
+
 const activityTracker = require('./middleware/activityTracker');
+const { requestLogger, _errorLogger, performanceLogger, securityLogger, logger } = require('./middleware/logging');
+const adminRoute = require('./router/adminRoute');
+const cleanupRoute = require('./router/cleanupRoute');
+const settingRoute = require('./router/settingRoute');
+const userRouter = require('./router/userRoute');
+const monitoringRoute = require('./router/monitoringRoute');
 const cleanupService = require('./services/cleanupService');
 
 const app = express();
@@ -20,23 +22,23 @@ const port = process.env.PORT || 8484;
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      scriptSrc: ["'self'"],
-      imgSrc: ["'self'", "data:", "https:"],
+      defaultSrc: ['\'self\''],
+      styleSrc: ['\'self\'', '\'unsafe-inline\''],
+      scriptSrc: ['\'self\''],
+      imgSrc: ['\'self\'', 'data:', 'https:'],
     },
   },
   hsts: {
     maxAge: 31536000,
     includeSubDomains: true,
-    preload: true
-  }
+    preload: true,
+  },
 }));
 
 // Compression middleware
 app.use(compression({
   level: parseInt(process.env.COMPRESSION_LEVEL) || 6,
-  threshold: 1024
+  threshold: 1024,
 }));
 
 // Rate limiting
@@ -49,7 +51,7 @@ const limiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   skipSuccessfulRequests: false,
-  skipFailedRequests: false
+  skipFailedRequests: false,
 });
 
 // Apply rate limiting to all routes
@@ -61,20 +63,20 @@ const uploadLimiter = rateLimit({
   max: 10, // limit each IP to 10 uploads per hour
   message: {
     error: 'Too many file uploads from this IP, please try again later.',
-  }
+  },
 });
 app.use('/api/setting/icons/upload', uploadLimiter);
 
 // CORS configuration
-const corsOrigins = process.env.CORS_ORIGIN 
+const corsOrigins = process.env.CORS_ORIGIN
   ? process.env.CORS_ORIGIN.split(',').map(origin => origin.trim())
   : ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002'];
 
 const corsOptions = {
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    
+    if (!origin) { return callback(null, true); }
+
     // Check if origin is in our allowed list
     if (corsOrigins.indexOf(origin) !== -1) {
       callback(null, true);
@@ -90,13 +92,13 @@ const corsOptions = {
   credentials: true,
   optionsSuccessStatus: 200,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Origin', 'Accept']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Origin', 'Accept'],
 };
 app.use(cors(corsOptions));
 
 // Body parsing middleware with limits
-app.use(express.json({ 
-  limit: process.env.MAX_FILE_SIZE || '10mb'
+app.use(express.json({
+  limit: process.env.MAX_FILE_SIZE || '10mb',
 }));
 
 // Serve static files from temp directory
@@ -105,9 +107,9 @@ app.use('/temp', express.static('temp'));
 // Handle body-parser errors
 app.use((error, req, res, next) => {
   if (error instanceof SyntaxError && error.status === 400 && 'body' in error) {
-    return res.status(400).json({ 
+    return res.status(400).json({
       error: 'Invalid JSON',
-      message: 'The request body contains invalid JSON format'
+      message: 'The request body contains invalid JSON format',
     });
   }
   next();
@@ -125,9 +127,9 @@ app.use((req, res, next) => {
   }
   next();
 });
-app.use(express.urlencoded({ 
-  extended: true, 
-  limit: process.env.MAX_FILE_SIZE || '10mb' 
+app.use(express.urlencoded({
+  extended: true,
+  limit: process.env.MAX_FILE_SIZE || '10mb',
 }));
 
 // Activity tracking middleware (track user activity for cleanup)
@@ -149,9 +151,9 @@ app.get('/health', (req, res) => {
     environment: process.env.NODE_ENV || 'development',
     version: process.env.npm_package_version || '1.0.0',
     memory: process.memoryUsage(),
-    database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
+    database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
   };
-  
+
   res.status(200).json(health);
 });
 
@@ -160,16 +162,17 @@ app.use('/api/user', userRouter);
 app.use('/api/setting', settingRoute);
 app.use('/api/cleanup', cleanupRoute);
 app.use('/api/admin', adminRoute);
+app.use('/api/monitoring', monitoringRoute);
 
 // Root endpoint
 app.get('/', (req, res) => {
   res.json({
     success: true,
-    message: "CoSearch API is running!",
+    message: 'CoSearch API is running!',
     version: process.env.npm_package_version || '1.0.0',
     environment: process.env.NODE_ENV || 'development',
     documentation: '/api/docs',
-    health: '/health'
+    health: '/health',
   });
 });
 
@@ -178,7 +181,7 @@ app.use('*', (req, res) => {
   res.status(404).json({
     error: 'Not Found',
     message: `Route ${req.originalUrl} not found`,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 });
 
@@ -189,7 +192,7 @@ app.use((error, req, res, next) => {
     stack: error.stack,
     url: req.url,
     method: req.method,
-    ip: req.ip
+    ip: req.ip,
   });
 
   // Check if headers have already been sent
@@ -199,11 +202,11 @@ app.use((error, req, res, next) => {
 
   // Don't leak error details in production
   const isDevelopment = process.env.NODE_ENV === 'development';
-  
+
   res.status(500).json({
     error: 'Internal Server Error',
     message: isDevelopment ? error.message : 'Something went wrong',
-    ...(isDevelopment && { stack: error.stack })
+    ...(isDevelopment && { stack: error.stack }),
   });
 });
 
@@ -211,24 +214,24 @@ app.use((error, req, res, next) => {
 async function main() {
   try {
     const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/cosearch';
-    
+
     await mongoose.connect(mongoUri, {
       maxPoolSize: 10,
       serverSelectionTimeoutMS: 5000,
-      socketTimeoutMS: 45000
+      socketTimeoutMS: 45000,
     });
-    
+
     logger.info('✅ MongoDB connected successfully!');
-    
+
     app.listen(port, () => {
       logger.info(`🚀 Server running on port ${port}`);
       logger.info(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
       logger.info(`📊 Health check: http://localhost:${port}/health`);
-      
+
       // Start the cleanup service
       cleanupService.start();
       logger.info('🧹 Cleanup service started');
-      
+
       if (process.env.NODE_ENV === 'production') {
         logger.info('🔒 Production mode enabled with enhanced security');
       }
@@ -242,16 +245,16 @@ async function main() {
 // Graceful shutdown
 const gracefulShutdown = (signal) => {
   logger.info(`${signal} received, shutting down gracefully`);
-  
+
   // Stop the cleanup service
   cleanupService.stop();
   logger.info('Cleanup service stopped');
-  
+
   mongoose.connection.close(() => {
     logger.info('MongoDB connection closed');
     process.exit(0);
   });
-  
+
   // Force exit after 10 seconds
   setTimeout(() => {
     logger.error('Forced shutdown after timeout');

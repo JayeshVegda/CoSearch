@@ -30,7 +30,7 @@ export const isValidSearchQuery = (query) => {
   if (trimmed.length > 500) return false;
   
   // Check for potentially dangerous characters
-  const dangerousChars = /[<>\"'&]/;
+  const dangerousChars = /[<>"'&]/;
   if (dangerousChars.test(trimmed)) return false;
   
   return true;
@@ -62,7 +62,7 @@ export const isValidSiteName = (name) => {
   if (trimmed.length < 1 || trimmed.length > 100) return false;
   
   // Check for potentially dangerous characters
-  const dangerousChars = /[<>\"'&]/;
+  const dangerousChars = /[<>"'&]/;
   if (dangerousChars.test(trimmed)) return false;
   
   return true;
@@ -152,11 +152,12 @@ export const sanitizeInput = (input, type = 'text') => {
       sanitized = sanitized.replace(/<[^>]*>/g, '');
       break;
       
-    case 'sql':
+    case 'sql': {
       // Basic SQL injection prevention
       const sqlKeywords = /(\b(SELECT|INSERT|UPDATE|DELETE|DROP|CREATE|ALTER|EXEC|UNION|SCRIPT)\b)/gi;
       sanitized = sanitized.replace(sqlKeywords, '');
       break;
+    }
       
     case 'xss':
       // XSS prevention
@@ -171,7 +172,7 @@ export const sanitizeInput = (input, type = 'text') => {
       
     default:
       // Default text sanitization
-      sanitized = sanitized.replace(/[<>\"'&]/g, '');
+      sanitized = sanitized.replace(/[<>"'&]/g, '');
   }
 
   return sanitized;

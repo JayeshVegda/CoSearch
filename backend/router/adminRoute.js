@@ -1,7 +1,8 @@
 const express = require('express');
+
 const router = express.Router();
-const { adminAuth } = require('../middleware/auth');
 const cleanupController = require('../controllers/cleanupController');
+const { adminAuth } = require('../middleware/auth');
 
 // Admin dashboard route with authentication
 router.get('/dashboard', adminAuth, (req, res) => {
@@ -14,9 +15,9 @@ router.get('/dashboard', adminAuth, (req, res) => {
         'Cleanup Service Management',
         'User Statistics',
         'Database Monitoring',
-        'Service Controls'
-      ]
-    }
+        'Service Controls',
+      ],
+    },
   });
 });
 
@@ -27,4 +28,4 @@ router.post('/cleanup/trigger', adminAuth, cleanupController.triggerCleanup);
 router.post('/cleanup/start', adminAuth, cleanupController.startCleanupService);
 router.post('/cleanup/stop', adminAuth, cleanupController.stopCleanupService);
 
-module.exports = router; 
+module.exports = router;

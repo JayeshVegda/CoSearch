@@ -1,8 +1,8 @@
-const mongoose = require('mongoose');
+const _mongoose = require('mongoose');
 
 function getDefaultUserData(userId) {
   return {
-    userId: userId,
+    userId,
     engine: [
       {
         categoryName: 'Search',
@@ -14,8 +14,8 @@ function getDefaultUserData(userId) {
           { siteName: 'Startpage', icon: { public_id: 'startpage', url: '/temp/startpage.png' }, siteUrl: 'https://www.startpage.com/sp/search?query={q}', isChecked: true },
           { siteName: 'Ecosia', icon: { public_id: 'ecosia', url: '/temp/ecosia.png' }, siteUrl: 'https://www.ecosia.org/search?q={q}', isChecked: true },
           { siteName: 'Yandex', icon: { public_id: 'yandex', url: '/temp/yandex.png' }, siteUrl: 'https://yandex.com/search/?text={q}', isChecked: true },
-          { siteName: 'Brave Search', icon: { public_id: 'brave', url: '/temp/brave.png' }, siteUrl: 'https://search.brave.com/search?q={q}', isChecked: true }
-        ]
+          { siteName: 'Brave Search', icon: { public_id: 'brave', url: '/temp/brave.png' }, siteUrl: 'https://search.brave.com/search?q={q}', isChecked: true },
+        ],
       },
       {
         categoryName: 'AI',
@@ -28,8 +28,8 @@ function getDefaultUserData(userId) {
           { siteName: 'HuggingChat', icon: { public_id: 'huggingface', url: '/temp/huggingface.png' }, siteUrl: 'https://huggingface.co/chat', isChecked: true },
           { siteName: 'Mistral', icon: { public_id: 'mistral', url: '/temp/mistral.png' }, siteUrl: 'https://chat.mistral.ai/', isChecked: true },
           { siteName: 'Gemini', icon: { public_id: 'gemini', url: '/temp/gemini.png' }, siteUrl: 'https://gemini.google.com/', isChecked: true },
-          { siteName: 'Meta AI', icon: { public_id: 'meta_ai', url: '/temp/meta_ai.png' }, siteUrl: 'https://www.meta.ai/', isChecked: true }
-        ]
+          { siteName: 'Meta AI', icon: { public_id: 'meta_ai', url: '/temp/meta_ai.png' }, siteUrl: 'https://www.meta.ai/', isChecked: true },
+        ],
       },
       {
         categoryName: 'Video',
@@ -37,8 +37,8 @@ function getDefaultUserData(userId) {
         url: [
           { siteName: 'YouTube', icon: { public_id: 'youtube', url: '/temp/youtube.png' }, siteUrl: 'https://www.youtube.com/results?search_query={q}', isChecked: true },
           { siteName: 'Vimeo', icon: { public_id: 'vimeo', url: '/temp/vimeo.png' }, siteUrl: 'https://vimeo.com/search?q={q}', isChecked: true },
-          { siteName: 'Dailymotion', icon: { public_id: 'dailymotion', url: '/temp/dailymotion.png' }, siteUrl: 'https://www.dailymotion.com/search/{q}', isChecked: true }
-        ]
+          { siteName: 'Dailymotion', icon: { public_id: 'dailymotion', url: '/temp/dailymotion.png' }, siteUrl: 'https://www.dailymotion.com/search/{q}', isChecked: true },
+        ],
       },
       {
         categoryName: 'Photo',
@@ -51,8 +51,8 @@ function getDefaultUserData(userId) {
           { siteName: 'Getty Images', icon: { public_id: 'gettyimages', url: '/temp/gettyimages.png' }, siteUrl: 'https://www.gettyimages.com/photos/{q}', isChecked: true },
           { siteName: 'Shutterstock', icon: { public_id: 'shutterstock', url: '/temp/shutterstock.png' }, siteUrl: 'https://www.shutterstock.com/search/{q}', isChecked: true },
           { siteName: 'Flickr', icon: { public_id: 'flickr', url: '/temp/flickr.png' }, siteUrl: 'https://www.flickr.com/search/?text={q}', isChecked: true },
-          { siteName: 'Adobe Stock', icon: { public_id: 'stock_adobe', url: '/temp/stock_adobe.png' }, siteUrl: 'https://stock.adobe.com/search?k={q}', isChecked: true }
-        ]
+          { siteName: 'Adobe Stock', icon: { public_id: 'stock_adobe', url: '/temp/stock_adobe.png' }, siteUrl: 'https://stock.adobe.com/search?k={q}', isChecked: true },
+        ],
       },
       {
         categoryName: 'Shopping',
@@ -64,8 +64,8 @@ function getDefaultUserData(userId) {
           { siteName: 'AliExpress', icon: { public_id: 'aliexpress', url: '/temp/aliexpress.png' }, siteUrl: 'https://www.aliexpress.com/wholesale?SearchText={q}', isChecked: true },
           { siteName: 'Best Buy', icon: { public_id: 'bestbuy', url: '/temp/bestbuy.png' }, siteUrl: 'https://www.bestbuy.com/site/searchpage.jsp?st={q}', isChecked: true },
           { siteName: 'Target', icon: { public_id: 'target', url: '/temp/target.png' }, siteUrl: 'https://www.target.com/s?searchTerm={q}', isChecked: true },
-          { siteName: 'Etsy', icon: { public_id: 'etsy', url: '/temp/etsy.png' }, siteUrl: 'https://www.etsy.com/search?q={q}', isChecked: true }
-        ]
+          { siteName: 'Etsy', icon: { public_id: 'etsy', url: '/temp/etsy.png' }, siteUrl: 'https://www.etsy.com/search?q={q}', isChecked: true },
+        ],
       },
       {
         categoryName: 'Social',
@@ -76,8 +76,8 @@ function getDefaultUserData(userId) {
           { siteName: 'Instagram', icon: { public_id: 'instagram', url: '/temp/instagram.png' }, siteUrl: 'https://www.instagram.com/explore/tags/{q}/', isChecked: true },
           { siteName: 'Reddit', icon: { public_id: 'reddit', url: '/temp/reddit.png' }, siteUrl: 'https://www.reddit.com/search/?q={q}', isChecked: true },
           { siteName: 'LinkedIn', icon: { public_id: 'linkedin', url: '/temp/linkedin.png' }, siteUrl: 'https://www.linkedin.com/search/results/all/?keywords={q}', isChecked: true },
-          { siteName: 'TikTok', icon: { public_id: 'tiktok', url: '/temp/tiktok.png' }, siteUrl: 'https://www.tiktok.com/search?q={q}', isChecked: true }
-        ]
+          { siteName: 'TikTok', icon: { public_id: 'tiktok', url: '/temp/tiktok.png' }, siteUrl: 'https://www.tiktok.com/search?q={q}', isChecked: true },
+        ],
       },
       {
         categoryName: 'News',
@@ -89,8 +89,8 @@ function getDefaultUserData(userId) {
           { siteName: 'Reuters', icon: { public_id: 'reuters', url: '/temp/reuters.png' }, siteUrl: 'https://www.reuters.com/search/news?blob={q}', isChecked: true },
           { siteName: 'The Guardian', icon: { public_id: 'guardian', url: '/temp/guardian.png' }, siteUrl: 'https://www.theguardian.com/uk/{q}', isChecked: true },
           { siteName: 'New York Times', icon: { public_id: 'nyt', url: '/temp/nyt.png' }, siteUrl: 'https://www.nytimes.com/search?query={q}', isChecked: true },
-          { siteName: 'Al Jazeera', icon: { public_id: 'aljazeera', url: '/temp/aljazeera.png' }, siteUrl: 'https://www.aljazeera.com/search/{q}', isChecked: true }
-        ]
+          { siteName: 'Al Jazeera', icon: { public_id: 'aljazeera', url: '/temp/aljazeera.png' }, siteUrl: 'https://www.aljazeera.com/search/{q}', isChecked: true },
+        ],
       },
       {
         categoryName: 'Finance',
@@ -100,11 +100,11 @@ function getDefaultUserData(userId) {
           { siteName: 'Google Finance', icon: { public_id: 'googlefinance', url: '/temp/googlefinance.png' }, siteUrl: 'https://www.google.com/finance/quote/{q}', isChecked: true },
           { siteName: 'TradingView', icon: { public_id: 'tradingview', url: '/temp/tradingview.png' }, siteUrl: 'https://www.tradingview.com/chart/?symbol={q}', isChecked: true },
           { siteName: 'Moneycontrol', icon: { public_id: 'moneycontrol', url: '/temp/moneycontrol.png' }, siteUrl: 'https://www.moneycontrol.com/india/stockpricequote/{q}', isChecked: true },
-          { siteName: 'NSE India', icon: { public_id: 'nse', url: '/temp/nse.png' }, siteUrl: 'https://www.nseindia.com/get-quotes/equity?symbol={q}', isChecked: true }
-        ]
-      }
+          { siteName: 'NSE India', icon: { public_id: 'nse', url: '/temp/nse.png' }, siteUrl: 'https://www.nseindia.com/get-quotes/equity?symbol={q}', isChecked: true },
+        ],
+      },
     ],
-    lastActivity: new Date()
+    lastActivity: new Date(),
   };
 }
 

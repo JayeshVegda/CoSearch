@@ -69,7 +69,7 @@ function CategoryBox({ data = [], loading = false, onCategoryChange, style = {},
 
   // Listen for settings changes to refresh categories
   useEffect(() => {
-    const handleSettingsChange = (event) => {
+    const handleSettingsChange = () => {
       if (refetchCategories) {
         refetchCategories();
       }

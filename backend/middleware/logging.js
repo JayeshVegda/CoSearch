@@ -1,8 +1,9 @@
-const winston = require('winston');
+const fs = require('fs');
 const path = require('path');
 
+const winston = require('winston');
+
 // Create logs directory if it doesn't exist
-const fs = require('fs');
 const logsDir = path.join(__dirname, '../logs');
 if (!fs.existsSync(logsDir)) {
   fs.mkdirSync(logsDir, { recursive: true });
@@ -14,24 +15,24 @@ const logger = winston.createLogger({
   format: winston.format.combine(
     winston.format.timestamp(),
     winston.format.errors({ stack: true }),
-    winston.format.json()
+    winston.format.json(),
   ),
   defaultMeta: { service: 'cosearch-api' },
   transports: [
     // Write all logs with level 'error' and below to error.log
-    new winston.transports.File({ 
-      filename: path.join(logsDir, 'error.log'), 
+    new winston.transports.File({
+      filename: path.join(logsDir, 'error.log'),
       level: 'error',
       maxsize: 5242880, // 5MB
-      maxFiles: 5
+      maxFiles: 5,
     }),
     // Write all logs with level 'info' and below to combined.log
-    new winston.transports.File({ 
+    new winston.transports.File({
       filename: path.join(logsDir, 'combined.log'),
       maxsize: 5242880, // 5MB
-      maxFiles: 5
-    })
-  ]
+      maxFiles: 5,
+    }),
+  ],
 });
 
 // If we're not in production, log to console as well
@@ -39,36 +40,36 @@ if (process.env.NODE_ENV !== 'production') {
   logger.add(new winston.transports.Console({
     format: winston.format.combine(
       winston.format.colorize(),
-      winston.format.simple()
-    )
+      winston.format.simple(),
+    ),
   }));
 }
 
 // Request logging middleware
 const requestLogger = (req, res, next) => {
   const start = Date.now();
-  
+
   // Log request
   logger.info('Incoming request', {
     method: req.method,
     url: req.url,
     ip: req.ip,
     userAgent: req.get('User-Agent'),
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 
   // Override res.end to log response
   const originalEnd = res.end;
-  res.end = function(chunk, encoding) {
+  res.end = function (chunk, encoding) {
     const duration = Date.now() - start;
-    
+
     logger.info('Request completed', {
       method: req.method,
       url: req.url,
       statusCode: res.statusCode,
       duration: `${duration}ms`,
       contentLength: res.get('Content-Length'),
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
 
     originalEnd.call(this, chunk, encoding);
@@ -86,7 +87,7 @@ const errorLogger = (err, req, res, next) => {
     url: req.url,
     ip: req.ip,
     userAgent: req.get('User-Agent'),
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
 
   next(err);
@@ -95,17 +96,17 @@ const errorLogger = (err, req, res, next) => {
 // Performance monitoring middleware
 const performanceLogger = (req, res, next) => {
   const start = process.hrtime();
-  
+
   res.on('finish', () => {
     const [seconds, nanoseconds] = process.hrtime(start);
     const duration = seconds * 1000 + nanoseconds / 1000000;
-    
+
     if (duration > 1000) { // Log slow requests (>1s)
       logger.warn('Slow request detected', {
         method: req.method,
         url: req.url,
         duration: `${duration.toFixed(2)}ms`,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
     }
   });
@@ -121,7 +122,7 @@ const securityLogger = (req, res, next) => {
     /javascript:/i,
     /on\w+\s*=/i,
     /union\s+select/i,
-    /drop\s+table/i
+    /drop\s+table/i,
   ];
 
   const body = JSON.stringify(req.body);
@@ -135,8 +136,8 @@ const securityLogger = (req, res, next) => {
         method: req.method,
         url: req.url,
         ip: req.ip,
-        userAgent: userAgent,
-        timestamp: new Date().toISOString()
+        userAgent,
+        timestamp: new Date().toISOString(),
       });
       break;
     }
@@ -150,5 +151,5 @@ module.exports = {
   requestLogger,
   errorLogger,
   performanceLogger,
-  securityLogger
-}; 
+  securityLogger,
+};

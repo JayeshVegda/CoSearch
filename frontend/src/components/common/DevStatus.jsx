@@ -1,41 +1,21 @@
-import { Badge, Group, ActionIcon, Tooltip } from '@mantine/core';
-import { IconCode, IconCheck, IconShield } from '@tabler/icons-react';
+import React from 'react';
+import { Badge, Group, Text } from '@mantine/core';
 
-function DevStatus() {
-  if (process.env.NODE_ENV !== 'development') {
-    return null;
-  }
+const DevStatus = () => {
+  const isDev = import.meta.env.DEV;
+  
+  if (!isDev) return null;
 
   return (
-    <Group position="top-right" style={{ position: 'fixed', top: 10, right: 10, zIndex: 1000 }}>
-      <Badge 
-        leftSection={<IconCode size={12} />}
-        color="green"
-        variant="filled"
-        size="sm"
-      >
+    <Group gap="xs" style={{ position: 'fixed', bottom: 10, right: 10, zIndex: 1000 }}>
+      <Badge color="orange" variant="filled" size="sm">
         DEV MODE
       </Badge>
-      <Badge 
-        leftSection={<IconCheck size={12} />}
-        color="blue"
-        variant="filled"
-        size="sm"
-      >
-        READY
-      </Badge>
-      <Tooltip label="Admin Dashboard">
-        <ActionIcon
-          variant="light"
-          color="blue"
-          size="sm"
-          onClick={() => window.open('/admin/dashboard', '_blank')}
-        >
-          <IconShield size={14} />
-        </ActionIcon>
-      </Tooltip>
+      <Text size="xs" c="dimmed">
+        {import.meta.env.VITE_APP_VERSION || '1.0.0'}
+      </Text>
     </Group>
   );
-}
+};
 
 export default DevStatus; 

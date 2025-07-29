@@ -1,21 +1,21 @@
 {
-  "name": "cosearch-frontend-dev",
-  "private": true,
+  "name": "cosearch-frontend",
   "version": "1.0.0",
   "type": "module",
-  "description": "CoSearch Frontend - Local Development",
+  "description": "CoSearch Frontend - Customizable Search Engine",
   "keywords": [
     "react",
     "search",
     "mantine",
     "vite",
-    "development"
+    "production"
   ],
   "author": "Jayesh Vegda",
   "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:prod": "vite build --mode production",
     "preview": "vite preview",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint . --ext js,jsx --fix",

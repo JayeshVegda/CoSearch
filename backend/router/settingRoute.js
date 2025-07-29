@@ -1,8 +1,7 @@
 const express = require('express');
-const router = express.Router();
-const wrapAsync = require('../utils/wrapAsync');
-const cloudinary = require('../utils/cloudinaryConfig');
 const multer = require('multer');
+
+const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
 // Import controllers
@@ -17,8 +16,10 @@ const {
   delNewUrl,
   urlList,
   toggleUrl,
-  resetToDefault
+  resetToDefault,
 } = require('../controllers/settingController');
+const cloudinary = require('../utils/cloudinaryConfig');
+const wrapAsync = require('../utils/wrapAsync');
 
 // =========================
 // User Routes
@@ -66,21 +67,21 @@ router.get('/category', async (req, res) => {
   try {
     const { userId } = req.query;
     if (!userId) {
-      return res.status(400).json({ error: "Missing userId in query" });
+      return res.status(400).json({ error: 'Missing userId in query' });
     }
-    
-    const user = await require('../models/userPreferencesModel').findOne({ userId: userId });
+
+    const user = await require('../models/userPreferencesModel').findOne({ userId });
     if (!user) {
       // Return default categories if user not found
       return res.json(['Search', 'AI', 'Video', 'Photo', 'Shopping', 'Social', 'News & Media', 'Finance']);
     }
-    
+
     // Extract category names from user's engine array
     const categoryNames = user.engine.map(cat => cat.categoryName);
     res.json(categoryNames);
   } catch (error) {
     console.error('Category endpoint error:', error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
@@ -90,7 +91,7 @@ router.post('/icons/upload', upload.single('icon'), async (req, res) => {
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded' });
     }
-    
+
     const stream = cloudinary.uploader.upload_stream(
       { folder: 'user-icons' },
       (error, result) => {
@@ -108,9 +109,9 @@ router.post('/icons/upload', upload.single('icon'), async (req, res) => {
         } catch (e) {
           console.error('Error sending Cloudinary success response:', e);
         }
-      }
+      },
     );
-    
+
     stream.on('error', (err) => {
       console.error('Stream error:', err);
       try {
@@ -119,7 +120,7 @@ router.post('/icons/upload', upload.single('icon'), async (req, res) => {
         console.error('Error sending stream error response:', e);
       }
     });
-    
+
     stream.end(req.file.buffer);
   } catch (err) {
     console.error('Upload route error:', err);
@@ -131,4 +132,4 @@ router.post('/icons/upload', upload.single('icon'), async (req, res) => {
   }
 });
 
-module.exports = router; 
+module.exports = router;
