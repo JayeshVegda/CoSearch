@@ -1,4 +1,7 @@
-require('dotenv').config();
+// Load environment variables - only load .env file in development
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
 const compression = require('compression');
 const cors = require('cors');
 const express = require('express');
@@ -213,30 +216,42 @@ app.use((error, req, res, next) => {
 // Database connection and server startup
 async function main() {
   try {
+    console.log('🚀 Starting CoSearch backend...');
+    console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`🔧 Port: ${port}`);
+    
     const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/cosearch';
+    console.log(`📊 MongoDB URI: ${mongoUri ? 'Set' : 'Not set'}`);
 
+    console.log('🔌 Connecting to MongoDB...');
     await mongoose.connect(mongoUri, {
       maxPoolSize: 10,
       serverSelectionTimeoutMS: 5000,
       socketTimeoutMS: 45000,
     });
 
+    console.log('✅ MongoDB connected successfully!');
     logger.info('✅ MongoDB connected successfully!');
 
-    app.listen(port, () => {
+    app.listen(port, '0.0.0.0', () => {
+      console.log(`🚀 Server running on port ${port}`);
+      console.log(`📊 Health check: http://localhost:${port}/health`);
       logger.info(`🚀 Server running on port ${port}`);
       logger.info(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
       logger.info(`📊 Health check: http://localhost:${port}/health`);
 
       // Start the cleanup service
       cleanupService.start();
+      console.log('🧹 Cleanup service started');
       logger.info('🧹 Cleanup service started');
 
       if (process.env.NODE_ENV === 'production') {
+        console.log('🔒 Production mode enabled with enhanced security');
         logger.info('🔒 Production mode enabled with enhanced security');
       }
     });
   } catch (err) {
+    console.error('❌ Failed to connect to MongoDB:', err);
     logger.error('❌ Failed to connect to MongoDB:', err);
     process.exit(1);
   }
