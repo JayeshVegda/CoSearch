@@ -1,32 +1,19 @@
-# Server Configuration
-PORT=8484
+# Copy these environment variables to Render
+
 NODE_ENV=production
-
-# Database Configuration
+PORT=8484
 MONGODB_URI=mongodb+srv://jayeshvegda198:uSjzmX98wAu8B675@cluster0.l8urdwi.mongodb.net/cosearch?retryWrites=true&w=majority&appName=Cluster0
-
-# Security
 JWT_SECRET=aba76c6f25af3a71982301f2eebd1c29e8379fb900ff7051218af538d0307f9c6d9f9e075ddff2ed63c50eaa56bb344087ac31139b21c04ef3a0438ada4cfe08
 SESSION_SECRET=6f4e4f78300045d58664a7155766a57162502b91cc72c6a32815513e44bd028e
 ADMIN_PASSWORD=cosearch_admin_2024
 CORS_ORIGIN=https://co-search-9xibmlbcx-jayesh-vegdas-projects.vercel.app
-
-# Rate Limiting
 RATE_LIMIT_WINDOW_MS=900000
 RATE_LIMIT_MAX_REQUESTS=100
-
-# Cloudinary Configuration (Set these up later)
 CLOUDINARY_CLOUD_NAME=your_cloudinary_name
 CLOUDINARY_API_KEY=your_cloudinary_key
 CLOUDINARY_API_SECRET=your_cloudinary_secret
-
-# AI Services (Optional - Set up later)
 GEMINI_API_KEY=your_gemini_api_key_here
-
-# Logging
 LOG_LEVEL=info
 ENABLE_LOGGING=true
-
-# File Upload
 MAX_FILE_SIZE=10mb
 COMPRESSION_LEVEL=6 
