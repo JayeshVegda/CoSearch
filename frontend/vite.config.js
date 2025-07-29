@@ -5,7 +5,7 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
   ],
-  base: mode === 'production' ? '/' : '/',
+  base: '/',
   build: {
     outDir: 'dist',
     sourcemap: mode === 'development',
