@@ -3,6 +3,7 @@ import { Text, Paper, Stack, useMantineTheme, useMantineColorScheme } from '@man
 import { IconWorld } from '@tabler/icons-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { getOrCreateUserId } from '../../utils/getOrCreateUserId';
+import { getImageUrl } from '../../utils/imageUtils';
 
 import axiosInstance from '../../lib/axios';
 
@@ -210,7 +211,7 @@ export default function SiteTiles({ selectedCategory, refetchCategories, isLoadi
           {/* Site Icon */}
           {site.icon ? (
             <img 
-              src={site.icon.url || site.icon} 
+              src={getImageUrl(site.icon.url || site.icon)} 
               alt={site.name}
               style={{
                 width: '10px',

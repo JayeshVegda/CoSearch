@@ -6,6 +6,7 @@ export default defineConfig(({ mode }) => ({
     react(),
   ],
   base: '/',
+  publicDir: 'public',
   build: {
     outDir: 'dist',
     sourcemap: mode === 'development',

@@ -6,6 +6,7 @@ import AddUrlModal from '../url/AddUrlModal';
 import { useQueryClient } from '@tanstack/react-query';
 import { getOrCreateUserId } from '../../utils/getOrCreateUserId';
 import axiosInstance from '../../lib/axios';
+import { getImageUrl } from '../../utils/imageUtils';
 
 async function uploadIconMock(file) {
   // Simulate upload delay
@@ -365,7 +366,7 @@ export default function UrlListPanel({ selectedCategory, refetchCategories, isLo
                     data-checkbox
                   />
                   {item.icon?.url ? (
-                    <Avatar src={item.icon.url} size="sm" mr={8} />
+                    <Avatar src={getImageUrl(item.icon.url)} size="sm" mr={8} />
                   ) : (
                     <Avatar color="gray" size="sm" mr={8}><IconWorld size={16} /></Avatar>
                   )}

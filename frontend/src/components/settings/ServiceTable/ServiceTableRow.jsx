@@ -1,5 +1,6 @@
 import { Switch, Group, Avatar, Text, Tooltip, ActionIcon, Table } from '@mantine/core';
 import { IconEdit, IconTrash } from '@tabler/icons-react';
+import { getImageUrl } from '../../../utils/imageUtils';
 
 function ServiceTableRow({ item, onEdit, onDelete }) {
   return (
@@ -11,7 +12,7 @@ function ServiceTableRow({ item, onEdit, onDelete }) {
       </Table.Td>
       <Table.Td>
         <Group gap="xs">
-          <Avatar src={item.icon?.url} size="sm" />
+          <Avatar src={getImageUrl(item.icon?.url)} size="sm" />
           <Text>{item.siteName}</Text>
         </Group>
       </Table.Td>
