@@ -1,3 +1,4 @@
+import React from 'react';
 import { MantineProvider, createTheme } from '@mantine/core';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
@@ -6,6 +7,8 @@ import Home from './pages/Home/Home';
 import AdminDashboard from './pages/Admin/AdminDashboard';
 import Docs from './pages/Docs/Docs';
 import ErrorBoundary from './components/common/ErrorBoundary';
+import HealthCheck from './components/common/HealthCheck';
+import { logDebugInfo, checkDeploymentIssues } from './utils/debug';
 
 // Get initial theme from localStorage or use system preference
 const getInitialTheme = () => {
@@ -36,6 +39,12 @@ const queryClient = new QueryClient({
 });
 
 function App() {
+  // Initialize debug logging
+  React.useEffect(() => {
+    logDebugInfo();
+    checkDeploymentIssues();
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <MantineProvider 
@@ -48,6 +57,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
               <Route path="/docs" element={<Docs />} />
+              <Route path="/health" element={<HealthCheck />} />
             </Routes>
           </Router>
         </ErrorBoundary>
