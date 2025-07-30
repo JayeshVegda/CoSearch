@@ -14,12 +14,7 @@ api.interceptors.request.use(
   (config) => {
     // Add request timestamp for debugging
     config.metadata = { startTime: new Date() };
-
-    // Log request only in development
-    if (import.meta.env.DEV) {
-      } ${config.url}`, config.data);
-    }
-
+    // No logging
     return config;
   },
   (error) => {
@@ -32,19 +27,14 @@ api.interceptors.response.use(
   (response) => {
     // Calculate request duration
     const duration = new Date() - response.config.metadata.startTime;
-
-    // Log response only in development
-    if (import.meta.env.DEV) {
-      } ${response.config.url} (${duration}ms)`, response.data);
-    }
-
+    // No logging
     return response;
   },
   (error) => {
     // Calculate request duration for failed requests
     if (error.config?.metadata?.startTime) {
       const duration = new Date() - error.config.metadata.startTime;
-      } ${error.config.url} (${duration}ms)`, error.message);
+      // No logging
     }
 
     // Handle different error scenarios
@@ -69,7 +59,8 @@ api.interceptors.response.use(
           // Server error
           break;
         default:
-          }
+          break;
+      }
 
       // Return a consistent error format
       return Promise.reject({
