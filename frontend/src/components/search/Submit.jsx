@@ -15,7 +15,6 @@ function Submit({ searchResults, searchQuery, style = {}, onSearch, type = "butt
   // Listen for settings changes
   useEffect(() => {
     const handleSettingsChange = (event) => {
-      console.log('Submit component received settings change event:', event.detail);
       // Force a refresh of the search data when settings change
       // This ensures the search button always has the latest settings
     };
@@ -33,17 +32,10 @@ function Submit({ searchResults, searchQuery, style = {}, onSearch, type = "butt
       e.preventDefault();
     }
 
-    console.log('Submit button clicked');
-    console.log('Current search query:', searchQuery);
-    console.log('Selected category:', selectedCategory);
-
     // If we have a search query and selected category, open the URLs directly
     if (searchQuery && searchQuery.trim() !== '' && selectedCategory) {
-      console.log('Opening search URLs for category:', selectedCategory);
-      
       // ALWAYS fetch fresh data from backend to get latest settings
       try {
-        console.log('Fetching FRESH category data for:', selectedCategory);
         const categoryName = typeof selectedCategory === 'string' ? selectedCategory : selectedCategory.categoryName;
         const userId = getOrCreateUserId();
         
@@ -54,36 +46,28 @@ function Submit({ searchResults, searchQuery, style = {}, onSearch, type = "butt
           _timestamp: Date.now() // Force fresh data
         });
         
-        console.log('FRESH category data response:', response.data);
         const filteredResults = filterSiteUrls(response.data);
-        console.log('FRESH filtered URLs (enabled only):', filteredResults);
+        :', filteredResults);
         
         if (filteredResults.length > 0) {
           // Replace {q} with search query in all URLs and open them
           filteredResults.forEach((result) => {
             const replacedUrl = result.url.replace(/{q}/g, encodeURIComponent(searchQuery.trim()));
-            console.log(`Opening ENABLED site ${result.name}:`, replacedUrl);
-            
             // Open each URL in a new tab
             window.open(replacedUrl, '_blank');
           });
         } else {
-          console.log('No enabled URLs found for this category');
           setCurrentCategoryName(categoryName);
           setNoUrlsModalOpen(true);
         }
       } catch (error) {
-        console.error('Failed to fetch fresh category data:', error);
         alert('Failed to fetch search data. Please try again.');
       }
     } else {
-      console.log('Missing search query or category');
       if (!searchQuery || searchQuery.trim() === '') {
-        console.log('No search query provided');
         alert('Please enter a search query.');
       }
       if (!selectedCategory) {
-        console.log('No category selected');
         alert('Please select a category.');
       }
     }

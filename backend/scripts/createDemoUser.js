@@ -48,7 +48,6 @@ async function main() {
   // Save to DB
   await UserPreferences.create(demoData);
 
-  console.log('Demo user created!');
   mongoose.disconnect();
 }
 

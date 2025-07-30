@@ -42,9 +42,6 @@ export default function UrlListPanel({ selectedCategory, refetchCategories, isLo
   const displayUrls = (selectedCategory && Array.isArray(selectedCategory.url)) ? selectedCategory.url : [];
 
   // Debug logging - moved after displayUrls is defined
-  console.log('selectedCategory:', selectedCategory);
-  console.log('displayUrls:', displayUrls);
-
   // Calculate counts for dynamic title
   const totalUrls = displayUrls.length;
   const enabledUrls = displayUrls.filter(url => url.isChecked).length;
@@ -123,8 +120,7 @@ export default function UrlListPanel({ selectedCategory, refetchCategories, isLo
           }
         });
         window.dispatchEvent(settingsChangeEvent);
-        console.log('Settings change event dispatched:', settingsChangeEvent.detail);
-      } else {
+        } else {
         alert('Failed to update URL: ' + (data?.error || 'Unknown error'));
       }
     } catch (err) {
@@ -161,8 +157,7 @@ export default function UrlListPanel({ selectedCategory, refetchCategories, isLo
           }
         });
         window.dispatchEvent(settingsChangeEvent);
-        console.log('Settings change event dispatched:', settingsChangeEvent.detail);
-      } else {
+        } else {
         alert('Failed to delete URL: ' + (data?.error || 'Unknown error'));
       }
     } catch (err) {
@@ -231,8 +226,7 @@ export default function UrlListPanel({ selectedCategory, refetchCategories, isLo
         }
       });
       window.dispatchEvent(settingsChangeEvent);
-      console.log('Settings change event dispatched:', settingsChangeEvent.detail);
-    } catch (err) {
+      } catch (err) {
       alert('Failed to add URL: ' + err.message);
     }
     setAddModalOpen(false);
@@ -246,8 +240,6 @@ export default function UrlListPanel({ selectedCategory, refetchCategories, isLo
     const urlData = displayUrls[idx];
     const siteName = urlData?.siteName;
     
-    console.log('Toggle checkbox:', { userId, categoryName, siteName, urlData, idx });
-    
     if (!userId || !categoryName || !siteName) {
       alert('Missing required info for toggle');
       return;
@@ -256,7 +248,6 @@ export default function UrlListPanel({ selectedCategory, refetchCategories, isLo
     try {
       const res = await axiosInstance.patch(`/setting/users/${encodeURIComponent(userId)}/categories/${encodeURIComponent(categoryName)}/urls/${encodeURIComponent(siteName)}/toggle`);
       const data = res.data;
-      console.log('Toggle response:', data);
       if (data && data.success) {
         // Invalidate both URL and category queries to refresh the data
         queryClient.invalidateQueries(['urlList', userId, categoryName]);
@@ -275,12 +266,10 @@ export default function UrlListPanel({ selectedCategory, refetchCategories, isLo
           }
         });
         window.dispatchEvent(settingsChangeEvent);
-        console.log('Settings change event dispatched:', settingsChangeEvent.detail);
-      } else {
+        } else {
         alert('Failed to toggle URL: ' + (data?.error || 'Unknown error'));
       }
     } catch (err) {
-      console.error('Toggle error:', err);
       alert('Failed to toggle URL: ' + err.message);
     }
   };

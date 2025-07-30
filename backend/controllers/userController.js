@@ -23,16 +23,12 @@ module.exports.register = async (req, res) => {
     // Check if user already exists
     let user = await UserPreferences.findOne({ userId });
 
-    console.log(`🔍 Checking for user: ${userId}`);
-    console.log(`🔍 User found: ${user ? 'YES' : 'NO'}`);
     if (user) {
-      console.log(`🔍 Existing user has ${user.engine.length} categories`);
-    }
+      }
 
     if (user) {
       // Check if user has default data, if not, fix it
       if (user.engine.length === 0) {
-        console.log(`🔧 Fixing user ${userId} with missing default data...`);
         const userData = getDefaultUserData(userId);
         user = await UserPreferences.findOneAndUpdate(
           { userId },
@@ -43,8 +39,7 @@ module.exports.register = async (req, res) => {
           },
           { new: true },
         );
-        console.log(`✅ User ${userId} fixed with ${user.engine.length} categories`);
-      }
+        }
 
       // Check if this is a recently created user (within last 5 seconds)
       // This handles the case where user was created by category endpoint
@@ -76,8 +71,6 @@ module.exports.register = async (req, res) => {
     // Create the new user
     const newUser = await UserPreferences.create(userData);
 
-    console.log(`✅ New user registered: ${userId} with ${newUser.engine.length} categories`);
-
     res.json({
       success: true,
       isNewUser: true,
@@ -91,8 +84,6 @@ module.exports.register = async (req, res) => {
       },
     });
   } catch (err) {
-    console.error('Registration error:', err);
-
     // Handle duplicate key error (shouldn't happen with our logic, but just in case)
     if (err.code === 11000) {
       return res.json({
@@ -138,7 +129,6 @@ module.exports.search = async (req, res) => {
     // Find user or create if doesn't exist
     let user = await UserPreferences.findOne({ userId });
     if (!user) {
-      console.log(`🆕 Creating new user during search: ${userId}`);
       const userData = getDefaultUserData(userId);
       user = await UserPreferences.create(userData);
     }
@@ -167,7 +157,6 @@ module.exports.search = async (req, res) => {
       enabledSites: enabledSites.length,
     });
   } catch (error) {
-    console.error('Search error:', error);
     res.status(500).json({
       success: false,
       error: error.message,
@@ -195,12 +184,10 @@ module.exports.category = async (req, res) => {
     let user = await UserPreferences.findOne({ userId });
 
     if (!user) {
-      console.log(`🆕 Creating new user in category endpoint: ${userId}`);
       const userData = getDefaultUserData(userId);
       user = await UserPreferences.create(userData);
     } else if (user.engine.length === 0) {
       // Fix user with missing default data
-      console.log(`🔧 Fixing user ${userId} with missing default data in category endpoint...`);
       const userData = getDefaultUserData(userId);
       user = await UserPreferences.findOneAndUpdate(
         { userId },
@@ -211,8 +198,7 @@ module.exports.category = async (req, res) => {
         },
         { new: true },
       );
-      console.log(`✅ User ${userId} fixed with ${user.engine.length} categories`);
-    }
+      }
 
     // Extract category names from user's engine array
     const categoryNames = user.engine.map(cat => cat.categoryName);
@@ -225,7 +211,6 @@ module.exports.category = async (req, res) => {
       userCreatedAt: user.createdAt,
     });
   } catch (error) {
-    console.error('Category endpoint error:', error);
     res.status(500).json({
       success: false,
       error: 'Internal server error',
@@ -277,7 +262,6 @@ module.exports.profile = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Profile endpoint error:', error);
     res.status(500).json({
       success: false,
       error: 'Internal server error',

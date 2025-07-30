@@ -19,8 +19,6 @@ try {
     </React.StrictMode>,
   );
 } catch (error) {
-  console.error('Failed to render app:', error);
-  
   // Fallback rendering
   const rootElement = document.getElementById('root');
   if (rootElement) {

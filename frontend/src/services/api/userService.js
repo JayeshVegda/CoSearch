@@ -6,7 +6,6 @@ export const registerUser = async (userId) => {
     const response = await axiosInstance.post('/user/register', { userId });
     return response.data;
   } catch (error) {
-    console.error('User registration error:', error);
     throw error;
   }
 };
@@ -17,7 +16,6 @@ export const getUserCategories = async (userId) => {
     const response = await axiosInstance.get(`/user/category?userId=${encodeURIComponent(userId)}`);
     return response.data;
   } catch (error) {
-    console.error('Error fetching user categories:', error);
     throw error;
   }
 };
@@ -28,7 +26,6 @@ export const searchByCategory = async (userId, categoryName) => {
     const response = await axiosInstance.post('/user/search', { userId, categoryName });
     return response.data;
   } catch (error) {
-    console.error('Search error:', error);
     throw error;
   }
 }; 

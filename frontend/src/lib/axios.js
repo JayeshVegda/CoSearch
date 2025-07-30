@@ -17,7 +17,7 @@ api.interceptors.request.use(
 
     // Log request only in development
     if (import.meta.env.DEV) {
-      console.log(`🚀 ${config.method?.toUpperCase()} ${config.url}`, config.data);
+      } ${config.url}`, config.data);
     }
 
     return config;
@@ -35,7 +35,7 @@ api.interceptors.response.use(
 
     // Log response only in development
     if (import.meta.env.DEV) {
-      console.log(`✅ ${response.config.method?.toUpperCase()} ${response.config.url} (${duration}ms)`, response.data);
+      } ${response.config.url} (${duration}ms)`, response.data);
     }
 
     return response;
@@ -44,7 +44,7 @@ api.interceptors.response.use(
     // Calculate request duration for failed requests
     if (error.config?.metadata?.startTime) {
       const duration = new Date() - error.config.metadata.startTime;
-      console.error(`❌ ${error.config.method?.toUpperCase()} ${error.config.url} (${duration}ms)`, error.message);
+      } ${error.config.url} (${duration}ms)`, error.message);
     }
 
     // Handle different error scenarios
@@ -58,23 +58,18 @@ api.interceptors.response.use(
           break;
         case 403:
           // Forbidden - show access denied message
-          console.error('Access denied');
           break;
         case 404:
           // Not found
-          console.error('Resource not found');
           break;
         case 422:
           // Validation errors
-          console.error('Validation failed:', data.errors);
           break;
         case 500:
           // Server error
-          console.error('Server error occurred');
           break;
         default:
-          console.error('API Error:', data.message || 'Unknown error');
-      }
+          }
 
       // Return a consistent error format
       return Promise.reject({
@@ -85,7 +80,6 @@ api.interceptors.response.use(
       });
     } else if (error.request) {
       // Network error
-      console.error('Network error:', error.message);
       return Promise.reject({
         status: 0,
         message: 'Network error. Please check your connection.',
@@ -93,7 +87,6 @@ api.interceptors.response.use(
       });
     } else {
       // Other errors
-      console.error('Request error:', error.message);
       return Promise.reject({
         status: -1,
         message: error.message || 'Request configuration error',

@@ -66,29 +66,19 @@ const corsOrigins = process.env.CORS_ORIGIN
   : ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002'];
 
 // Log CORS configuration for debugging
-console.log('CORS Origins:', corsOrigins);
-console.log('Environment:', process.env.NODE_ENV);
-console.log('Raw CORS_ORIGIN env var:', process.env.CORS_ORIGIN);
-
 const corsOptions = {
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) { 
-      console.log('CORS: Allowing request with no origin');
       return callback(null, true); 
     }
 
-    console.log('CORS: Checking origin:', origin);
-    console.log('CORS: Allowed origins:', corsOrigins);
-
     // Check if origin is in our allowed list
     if (corsOrigins.indexOf(origin) !== -1) {
-      console.log('CORS: Origin allowed:', origin);
       callback(null, true);
     } else {
       // For development, allow all localhost origins
       if (process.env.NODE_ENV === 'development' && origin.includes('localhost')) {
-        console.log('CORS: Allowing localhost origin in development:', origin);
         callback(null, true);
       } else {
         // Allow any Vercel subdomain for the main domain
@@ -96,10 +86,8 @@ const corsOptions = {
           (origin.includes('co-search-frontend') || origin.includes('co-search-frontend-'));
         
         if (isVercelDomain) {
-          console.log('CORS: Allowing Vercel subdomain:', origin);
           callback(null, true);
         } else {
-          console.log('CORS: Origin rejected:', origin);
           callback(new Error(`Not allowed by CORS. Origin: ${origin}, Allowed: ${corsOrigins.join(', ')}`));
         }
       }
@@ -252,42 +240,29 @@ app.use((error, req, res, next) => {
 // Database connection and server startup
 async function main() {
   try {
-    console.log('🚀 Starting CoSearch backend...');
-    console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
-    console.log(`🔧 Port: ${port}`);
-    
     const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/cosearch';
-    console.log(`📊 MongoDB URI: ${mongoUri ? 'Set' : 'Not set'}`);
-
-    console.log('🔌 Connecting to MongoDB...');
     await mongoose.connect(mongoUri, {
       maxPoolSize: 10,
       serverSelectionTimeoutMS: 5000,
       socketTimeoutMS: 45000,
     });
 
-    console.log('✅ MongoDB connected successfully!');
     logger.info('✅ MongoDB connected successfully!');
 
     app.listen(port, '0.0.0.0', () => {
-      console.log(`🚀 Server running on port ${port}`);
-      console.log(`📊 Health check: http://localhost:${port}/health`);
       logger.info(`🚀 Server running on port ${port}`);
       logger.info(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
       logger.info(`📊 Health check: http://localhost:${port}/health`);
 
       // Start the cleanup service
       cleanupService.start();
-      console.log('🧹 Cleanup service started');
       logger.info('🧹 Cleanup service started');
 
       if (process.env.NODE_ENV === 'production') {
-        console.log('🔒 Production mode enabled with enhanced security');
         logger.info('🔒 Production mode enabled with enhanced security');
       }
     });
   } catch (err) {
-    console.error('❌ Failed to connect to MongoDB:', err);
     logger.error('❌ Failed to connect to MongoDB:', err);
     process.exit(1);
   }

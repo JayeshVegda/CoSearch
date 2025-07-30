@@ -72,8 +72,7 @@ export default function UserPreferencePanel({ onClose }) {
             urls: urlsResponse.data.urls || []
           });
         } catch (error) {
-          console.error(`Error fetching URLs for category ${category}:`, error);
-        }
+          }
       }
 
       // Create and download JSON file
@@ -136,8 +135,7 @@ export default function UserPreferencePanel({ onClose }) {
                 icon: url.icon || ''
               });
             } catch (error) {
-              console.error(`Error importing URL ${url}:`, error);
-            }
+              }
           }
         }
       }

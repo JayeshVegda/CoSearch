@@ -19,7 +19,6 @@ module.exports.userData = async (req, res) => {
     }
     res.status(200).json({ success: true, user });
   } catch (e) {
-    console.error('User Data Error :', e);
     res.status(500).json({ error: 'Internal server error', message: e.message });
   }
 };
@@ -40,7 +39,6 @@ module.exports.categoryList = async (req, res) => {
     // Find user or create if doesn't exist
     let user = await UserPreferences.findOne({ userId });
     if (!user) {
-      console.log(`🆕 Creating new user in settings: ${userId}`);
       const userData = getDefaultUserData(userId);
       user = await UserPreferences.create(userData);
     }
@@ -48,7 +46,6 @@ module.exports.categoryList = async (req, res) => {
     const categoryNames = user.engine.map(category => category.categoryName);
     res.status(200).json({ success: true, categories: categoryNames, userId });
   } catch (error) {
-    console.error('Error fetching categories:', error);
     res.status(500).json({ error: 'Internal server error', message: error.message });
   }
 };
@@ -65,7 +62,6 @@ module.exports.addCategory = async (req, res) => {
     // Find user or create if doesn't exist
     let user = await UserPreferences.findOne({ userId });
     if (!user) {
-      console.log(`🆕 Creating new user in addCategory: ${userId}`);
       const userData = getDefaultUserData(userId);
       user = await UserPreferences.create(userData);
     }
@@ -84,7 +80,6 @@ module.exports.addCategory = async (req, res) => {
     }
     res.status(201).json({ success: true, message: 'Category added successfully', category: newCategory, userId });
   } catch (error) {
-    console.error('Error adding category:', error);
     res.status(500).json({ error: 'Internal server error', message: error.message });
   }
 };
@@ -101,7 +96,6 @@ module.exports.editCategory = async (req, res) => {
     // Find user or create if doesn't exist
     let user = await UserPreferences.findOne({ userId });
     if (!user) {
-      console.log(`🆕 Creating new user in editCategory: ${userId}`);
       const userData = getDefaultUserData(userId);
       user = await UserPreferences.create(userData);
     }
@@ -133,7 +127,6 @@ module.exports.editCategory = async (req, res) => {
     const updatedCategory = updatedUser.engine[categoryIndex];
     res.status(200).json({ success: true, message: 'Category updated successfully', category: updatedCategory, userId });
   } catch (error) {
-    console.error('Error editing category:', error);
     res.status(500).json({ error: 'Internal server error', message: error.message });
   }
 };
@@ -149,7 +142,6 @@ module.exports.delCategory = async (req, res) => {
     // Find user or create if doesn't exist
     let user = await UserPreferences.findOne({ userId });
     if (!user) {
-      console.log(`🆕 Creating new user in delCategory: ${userId}`);
       const userData = getDefaultUserData(userId);
       user = await UserPreferences.create(userData);
     }
@@ -167,7 +159,6 @@ module.exports.delCategory = async (req, res) => {
     }
     res.status(200).json({ success: true, message: 'Category deleted successfully', deletedCategory: catName, userId, remainingCategories: updatedUser.engine.length });
   } catch (error) {
-    console.error('Error deleting category:', error);
     res.status(500).json({ error: 'Internal server error', message: error.message });
   }
 };
@@ -187,7 +178,6 @@ module.exports.urlList = async (req, res) => {
     // Find user or create if doesn't exist
     let user = await UserPreferences.findOne({ userId });
     if (!user) {
-      console.log(`🆕 Creating new user in urlList: ${userId}`);
       const userData = getDefaultUserData(userId);
       user = await UserPreferences.create(userData);
     }
@@ -197,7 +187,6 @@ module.exports.urlList = async (req, res) => {
     }
     res.status(200).json({ success: true, urls: category.url, userId, categoryName: catName });
   } catch (error) {
-    console.error('Error fetching URLs:', error);
     res.status(500).json({ error: 'Internal server error', message: error.message });
   }
 };
@@ -214,7 +203,6 @@ module.exports.addNewUrl = async (req, res) => {
     // Find user or create if doesn't exist
     let user = await UserPreferences.findOne({ userId });
     if (!user) {
-      console.log(`🆕 Creating new user in addNewUrl: ${userId}`);
       const userData = getDefaultUserData(userId);
       user = await UserPreferences.create(userData);
     }
@@ -248,7 +236,6 @@ module.exports.addNewUrl = async (req, res) => {
     }
     res.status(201).json({ success: true, message: 'URL added successfully', url: newUrl, categoryName: catName, userId });
   } catch (error) {
-    console.error('Error adding URL:', error);
     res.status(500).json({ error: 'Internal server error', message: error.message });
   }
 };
@@ -265,7 +252,6 @@ module.exports.editNewUrl = async (req, res) => {
     // Find user or create if doesn't exist
     let user = await UserPreferences.findOne({ userId });
     if (!user) {
-      console.log(`🆕 Creating new user in editNewUrl: ${userId}`);
       const userData = getDefaultUserData(userId);
       user = await UserPreferences.create(userData);
     }
@@ -300,7 +286,6 @@ module.exports.editNewUrl = async (req, res) => {
     const updatedUrl = updatedUser.engine[categoryIndex].url[urlIndex];
     res.status(200).json({ success: true, message: 'URL updated successfully', url: updatedUrl, categoryName: catName, userId });
   } catch (error) {
-    console.error('Error editing URL:', error);
     res.status(500).json({ error: 'Internal server error', message: error.message });
   }
 };
@@ -316,7 +301,6 @@ module.exports.delNewUrl = async (req, res) => {
     // Find user or create if doesn't exist
     let user = await UserPreferences.findOne({ userId });
     if (!user) {
-      console.log(`🆕 Creating new user in delNewUrl: ${userId}`);
       const userData = getDefaultUserData(userId);
       user = await UserPreferences.create(userData);
     }
@@ -338,7 +322,6 @@ module.exports.delNewUrl = async (req, res) => {
     }
     res.status(200).json({ success: true, message: 'URL deleted successfully', siteName, categoryName: catName, userId });
   } catch (error) {
-    console.error('Error deleting URL:', error);
     res.status(500).json({ error: 'Internal server error', message: error.message });
   }
 };
@@ -354,7 +337,6 @@ module.exports.toggleUrl = async (req, res) => {
     // Find user or create if doesn't exist
     let user = await UserPreferences.findOne({ userId });
     if (!user) {
-      console.log(`🆕 Creating new user in toggleUrl: ${userId}`);
       const userData = getDefaultUserData(userId);
       user = await UserPreferences.create(userData);
     }
@@ -379,7 +361,6 @@ module.exports.toggleUrl = async (req, res) => {
     const updatedUrl = updatedUser.engine[categoryIndex].url[urlIndex];
     res.status(200).json({ success: true, message: `URL ${newIsChecked ? 'enabled' : 'disabled'} successfully`, url: updatedUrl, categoryName: catName, userId, isChecked: newIsChecked });
   } catch (error) {
-    console.error('Error toggling URL:', error);
     res.status(500).json({ error: 'Internal server error', message: error.message });
   }
 };
@@ -411,8 +392,6 @@ module.exports.resetToDefault = async (req, res) => {
       return res.status(500).json({ error: 'Failed to reset user data' });
     }
 
-    console.log(`✅ User ${userId} data reset to default with ${updatedUser.engine.length} categories`);
-
     res.status(200).json({
       success: true,
       message: 'User data reset to default successfully',
@@ -421,7 +400,6 @@ module.exports.resetToDefault = async (req, res) => {
       totalSites: updatedUser.engine.reduce((total, cat) => total + cat.url.length, 0),
     });
   } catch (error) {
-    console.error('Error resetting user data:', error);
     res.status(500).json({ error: 'Internal server error', message: error.message });
   }
 };

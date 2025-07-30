@@ -39,10 +39,8 @@ async function main() {
         public_id: result.public_id,
         url: result.secure_url,
       };
-      console.log(`Uploaded ${file} as ${result.public_id}`);
-    } catch (err) {
-      console.error(`Failed to upload ${file}:`, err);
-    }
+      } catch (err) {
+      }
   }
 
   // 4. Update all user preferences in DB
@@ -61,12 +59,10 @@ async function main() {
     }
     if (updated) {
       await user.save();
-      console.log(`Updated user ${user.userId}`);
-    }
+      }
   }
 
   mongoose.disconnect();
-  console.log('Done!');
-}
+  }
 
 main();

@@ -25,8 +25,6 @@ export const getCategoryList = async (userId) => {
     
     throw new Error(response.data?.error || 'Failed to get categories');
   } catch (error) {
-    console.error('Category API Error:', error);
-    
     // Return fallback categories if API fails
     const fallbackCategories = ['Search', 'AI', 'Video', 'Photo', 'Shopping', 'Social', 'News & Media', 'Finance'];
     return fallbackCategories;

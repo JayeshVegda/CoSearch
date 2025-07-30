@@ -32,10 +32,8 @@ export const useUserInitialization = () => {
             localStorage.setItem(`user_registered_${localUserId}`, 'true');
             
             if (registrationResult.isNewUser) {
-              console.log('🎉 New user registered successfully!');
-            } else {
-              console.log('👋 Welcome back!');
-            }
+              } else {
+              }
           } else {
             throw new Error(registrationResult.error || 'Registration failed');
           }
@@ -46,7 +44,6 @@ export const useUserInitialization = () => {
           localStorage.setItem('onboardingCompleted', 'true');
         }
       } catch (err) {
-        console.error('User initialization error:', err);
         setError(err.message);
       } finally {
         setIsLoading(false);
@@ -59,10 +56,8 @@ export const useUserInitialization = () => {
   // Listen for onboarding completion to update isNewUser state
   useEffect(() => {
     const handleOnboardingCompleted = () => {
-      console.log('UserInitialization: Onboarding completed, updating isNewUser state');
       setIsNewUser(false);
-      console.log('UserInitialization: isNewUser set to false');
-    };
+      };
 
     window.addEventListener('onboardingCompleted', handleOnboardingCompleted);
     return () => window.removeEventListener('onboardingCompleted', handleOnboardingCompleted);

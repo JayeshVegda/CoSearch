@@ -18,11 +18,8 @@ export const useCategoryList = (userId) => {
   // Listen for settings changes to refresh data
   useEffect(() => {
     const handleSettingsChange = (event) => {
-      console.log('useCategoryList received settings change event:', event.detail);
-      
       // If it's a data reset or import, invalidate the categories query
       if (event.detail.type === 'dataReset' || event.detail.type === 'dataImported') {
-        console.log('Invalidating categories query due to reset/import');
         queryClient.invalidateQueries(['categories', userId]);
         queryClient.invalidateQueries(['categoryList', userId]);
       }

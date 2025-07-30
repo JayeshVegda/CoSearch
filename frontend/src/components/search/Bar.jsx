@@ -24,14 +24,10 @@ function Bar({ onCategoryChange, searchResults, searchQuery, onQueryChange, sele
     const categoryList = Array.isArray(categoryResponse) ? categoryResponse : [];
 
     // Debug logging
-    console.log('Bar component:', { categoryResponse, categoryList, loading, isError, selectedCategory });
-
     // Get the selected category value (string)
     const selectedValue = selectedCategory ? 
         (typeof selectedCategory === 'string' ? selectedCategory : selectedCategory.categoryName) : 
         (categoryList.length > 0 ? categoryList[0] : undefined);
-
-    console.log('Bar selectedValue:', selectedValue);
 
     if (loading) {
         return (

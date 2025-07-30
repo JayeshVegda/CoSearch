@@ -17,7 +17,6 @@ export const searchByCategory = async (userId, categoryName) => {
     // Fallback for old API format
     return response.data;
   } catch (error) {
-    console.error('Search API Error:', error);
     throw error;
   }
 };

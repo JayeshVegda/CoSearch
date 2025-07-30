@@ -262,8 +262,6 @@ async function insertTestData() {
     const UserPreferences = require('../models/userPreferencesModel');
     const testData = generateTestData();
 
-    console.log(`🗃️  Inserting ${testData.length} test users...`);
-
     // Clear existing test users
     await UserPreferences.deleteMany({
       userId: { $regex: /^(testuser|customuser)/ },
@@ -272,22 +270,13 @@ async function insertTestData() {
     // Insert new test data
     const result = await UserPreferences.insertMany(testData);
 
-    console.log(`✅ Successfully inserted ${result.length} test users!`);
-    console.log('\n📊 Test Users Created:');
-
     result.forEach(user => {
       const categoryCount = user.engine.length;
       const totalUrls = user.engine.reduce((sum, cat) => sum + cat.url.length, 0);
-      console.log(`- ${user.userId}: ${categoryCount} categories, ${totalUrls} URLs`);
-    });
+      });
 
-    console.log('\n🧪 Test Commands:');
-    console.log('- Get categories: curl "http://localhost:8484/api/user/category?userId=testuser1"');
-    console.log('- Search: curl -X POST http://localhost:8484/api/user/search -H "Content-Type: application/json" -d \'{"userId":"testuser1","categoryName":"Search"}\'');
-    console.log('- Register: curl -X POST http://localhost:8484/api/user/register -H "Content-Type: application/json" -d \'{"userId":"newuser123"}\'');
-  } catch (error) {
-    console.error('❌ Error inserting test data:', error);
-  }
+    } catch (error) {
+    }
 }
 
 // Function to get test data without inserting
@@ -307,15 +296,12 @@ if (require.main === module) {
 
   mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/cosearch')
     .then(() => {
-      console.log('✅ Connected to MongoDB');
       return insertTestData();
     })
     .then(() => {
-      console.log('🎉 Test data insertion complete!');
       mongoose.disconnect();
     })
     .catch(err => {
-      console.error('❌ Database connection failed:', err);
       process.exit(1);
     });
 }

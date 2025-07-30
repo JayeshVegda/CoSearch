@@ -27,11 +27,8 @@ export default function SiteTiles({ selectedCategory, refetchCategories, isLoadi
       const userId = getOrCreateUserId();
       const categoryName = typeof selectedCategory === 'string' ? selectedCategory : selectedCategory.categoryName;
       
-      console.log('Fetching sites for category:', categoryName);
       // Use the settings endpoint to get ALL sites (enabled and disabled)
       const response = await axiosInstance.get(`/setting/users/${encodeURIComponent(userId)}/categories/${encodeURIComponent(categoryName)}/urls`);
-      console.log('URLs response:', response.data);
-      
       if (response.data.success && response.data.urls) {
         const allSites = response.data.urls.map(site => ({
           name: site.siteName,
@@ -40,13 +37,11 @@ export default function SiteTiles({ selectedCategory, refetchCategories, isLoadi
           description: site.description || null,
           enabled: site.isChecked !== false
         }));
-        console.log('Mapped sites:', allSites);
         setSites(allSites);
       } else {
         setSites([]);
       }
     } catch (error) {
-      console.error('Failed to fetch sites:', error);
       setSites([]);
     } finally {
       setLoadingSites(false);
@@ -61,11 +56,8 @@ export default function SiteTiles({ selectedCategory, refetchCategories, isLoadi
   // Listen for settings changes to refresh data
   useEffect(() => {
     const handleSettingsChange = (event) => {
-      console.log('SiteTiles received settings change event:', event.detail);
-      
       // Refresh on data reset, import, or any non-toggle action
       if (event.detail.type === 'dataReset' || event.detail.type === 'dataImported' || event.detail.action !== 'toggled') {
-        console.log('SiteTiles refreshing sites due to settings change');
         fetchSites();
       }
     };
@@ -76,12 +68,10 @@ export default function SiteTiles({ selectedCategory, refetchCategories, isLoadi
 
   // Toggle site state
   const handleToggle = async (site) => {
-    console.log('SiteTiles: handleToggle called for site:', site);
     const userId = getOrCreateUserId();
     const categoryName = typeof selectedCategory === 'string' ? selectedCategory : selectedCategory.categoryName;
     
     if (!userId || !categoryName || !site.name) {
-      console.log('SiteTiles: Missing required data for toggle:', { userId, categoryName, siteName: site.name });
       return;
     }
     
@@ -116,7 +106,6 @@ export default function SiteTiles({ selectedCategory, refetchCategories, isLoadi
         );
       }
     } catch (error) {
-      console.error('Toggle error:', error);
       // Revert on error
       setSites(prevSites => 
         prevSites.map(s => 
@@ -169,7 +158,6 @@ export default function SiteTiles({ selectedCategory, refetchCategories, isLoadi
         <Paper
           key={site.name}
           onClick={(e) => {
-            console.log('SiteTiles: Paper clicked for site:', site.name);
             e.preventDefault();
             e.stopPropagation();
             handleToggle(site);

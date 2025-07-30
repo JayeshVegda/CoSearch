@@ -83,7 +83,6 @@ public
 
 # Temporary folders
 tmp/
-temp/
 
 # Editor directories and files
 .vscode/
@@ -108,7 +107,6 @@ Thumbs.db
 
 # Uploads
 uploads/
-temp/
 
 # Docker
 .dockerignore

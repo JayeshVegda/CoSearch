@@ -13,13 +13,12 @@ function CategoryBox({ data = [], loading = false, onCategoryChange, style = {},
   const [isHovering, setIsHovering] = useState(false);
 
   // Debug logging
-  console.log('CategoryBox received data:', data, 'type:', typeof data, 'isArray:', Array.isArray(data));
+  );
 
   // Safely normalize data to ensure we always have an array of strings
   const normalizedData = React.useMemo(() => {
     // Ensure data is an array
     if (!Array.isArray(data)) {
-      console.warn('CategoryBox: data is not an array:', data, 'type:', typeof data);
       return [];
     }
     
@@ -30,12 +29,9 @@ function CategoryBox({ data = [], loading = false, onCategoryChange, style = {},
         return String(item);
       });
     } catch (error) {
-      console.error('CategoryBox: Error processing data:', error);
       return [];
     }
   }, [data]);
-
-  console.log('CategoryBox normalizedData:', normalizedData);
 
   const handleChange = (value) => {
     if (onCategoryChange && value) {

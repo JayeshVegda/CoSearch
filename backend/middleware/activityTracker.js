@@ -22,7 +22,6 @@ const activityTracker = async (req, res, next) => {
     next();
   } catch (error) {
     // Don't block the request if activity tracking fails
-    console.error('Activity tracking error:', error);
     next();
   }
 };

@@ -7,13 +7,10 @@ export const useOnboarding = () => {
     // Check if onboarding has been completed
     const onboardingCompleted = localStorage.getItem('onboardingCompleted');
     
-    console.log('Onboarding check:', { onboardingCompleted });
-    
     setIsLoading(false);
   }, []);
 
   const completeOnboarding = () => {
-    console.log('Completing onboarding');
     localStorage.setItem('onboardingCompleted', 'true');
     // Force a re-render by dispatching a custom event
     window.dispatchEvent(new CustomEvent('onboardingCompleted'));

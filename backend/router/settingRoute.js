@@ -80,7 +80,6 @@ router.get('/category', async (req, res) => {
     const categoryNames = user.engine.map(cat => cat.categoryName);
     res.json(categoryNames);
   } catch (error) {
-    console.error('Category endpoint error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
@@ -96,39 +95,32 @@ router.post('/icons/upload', upload.single('icon'), async (req, res) => {
       { folder: 'user-icons' },
       (error, result) => {
         if (error) {
-          console.error('Cloudinary error:', error);
           try {
             res.status(500).json({ error: error.message });
           } catch (e) {
-            console.error('Error sending Cloudinary error response:', e);
-          }
+            }
           return;
         }
         try {
           res.json({ public_id: result.public_id, url: result.secure_url });
         } catch (e) {
-          console.error('Error sending Cloudinary success response:', e);
-        }
+          }
       },
     );
 
     stream.on('error', (err) => {
-      console.error('Stream error:', err);
       try {
         res.status(500).json({ error: 'Stream error: ' + err.message });
       } catch (e) {
-        console.error('Error sending stream error response:', e);
-      }
+        }
     });
 
     stream.end(req.file.buffer);
   } catch (err) {
-    console.error('Upload route error:', err);
     try {
       res.status(500).json({ error: err.message });
     } catch (e) {
-      console.error('Error sending catch error response:', e);
-    }
+      }
   }
 });
 

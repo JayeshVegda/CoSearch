@@ -35,8 +35,7 @@ const CleanupDashboard = () => {
       setStatus(statusRes.data.data);
     } catch (err) {
       setError('Failed to fetch cleanup data');
-      console.error('Error fetching cleanup data:', err);
-    } finally {
+      } finally {
       setLoading(false);
     }
   };
@@ -48,8 +47,7 @@ const CleanupDashboard = () => {
       await fetchData(); // Refresh data
     } catch (err) {
       setError('Failed to trigger cleanup');
-      console.error('Error triggering cleanup:', err);
-    } finally {
+      } finally {
       setLoading(false);
     }
   };
@@ -61,8 +59,7 @@ const CleanupDashboard = () => {
       await fetchData(); // Refresh data
     } catch (err) {
       setError('Failed to start cleanup service');
-      console.error('Error starting cleanup service:', err);
-    } finally {
+      } finally {
       setLoading(false);
     }
   };
@@ -74,8 +71,7 @@ const CleanupDashboard = () => {
       await fetchData(); // Refresh data
     } catch (err) {
       setError('Failed to stop cleanup service');
-      console.error('Error stopping cleanup service:', err);
-    } finally {
+      } finally {
       setLoading(false);
     }
   };

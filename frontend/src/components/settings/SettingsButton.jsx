@@ -34,11 +34,8 @@ function SettingsButton() {
   // Listen for settings changes to refresh data
   useEffect(() => {
     const handleSettingsChange = (event) => {
-      console.log('SettingsButton received settings change event:', event.detail);
-      
       // If it's a data reset or import, refresh the category data
       if (event.detail.type === 'dataReset' || event.detail.type === 'dataImported') {
-        console.log('Refreshing category data due to reset/import');
         queryClient.invalidateQueries(['categoryList', userid]);
         queryClient.invalidateQueries(['categories', userid]);
         refetch();

@@ -15,7 +15,6 @@ export const getUserData = async (userId) => {
     
     throw new Error(response.data?.error || 'Failed to get user data');
   } catch (error) {
-    console.error('Get user data error:', error);
     throw error;
   }
 };
@@ -35,7 +34,6 @@ export const getUserCategories = async (userId) => {
     
     throw new Error(response.data?.error || 'Failed to get categories');
   } catch (error) {
-    console.error('Get categories error:', error);
     throw error;
   }
 };
@@ -62,7 +60,6 @@ export const addCategory = async (userId, categoryName, description = '') => {
     
     throw new Error(response.data?.error || 'Failed to add category');
   } catch (error) {
-    console.error('Add category error:', error);
     throw error;
   }
 };
@@ -89,7 +86,6 @@ export const editCategory = async (userId, catName, newCategoryName, newDescript
     
     throw new Error(response.data?.error || 'Failed to edit category');
   } catch (error) {
-    console.error('Edit category error:', error);
     throw error;
   }
 };
@@ -110,7 +106,6 @@ export const deleteCategory = async (userId, catName) => {
     
     throw new Error(response.data?.error || 'Failed to delete category');
   } catch (error) {
-    console.error('Delete category error:', error);
     throw error;
   }
 };
@@ -131,7 +126,6 @@ export const getUrlsInCategory = async (userId, catName) => {
     
     throw new Error(response.data?.error || 'Failed to get URLs');
   } catch (error) {
-    console.error('Get URLs error:', error);
     throw error;
   }
 };
@@ -160,7 +154,6 @@ export const addUrl = async (userId, catName, siteName, url, icon = null, descri
     
     throw new Error(response.data?.error || 'Failed to add URL');
   } catch (error) {
-    console.error('Add URL error:', error);
     throw error;
   }
 };
@@ -195,7 +188,6 @@ export const editUrl = async (userId, catName, siteName, newSiteName, newUrl, ne
     
     throw new Error(response.data?.error || 'Failed to edit URL');
   } catch (error) {
-    console.error('Edit URL error:', error);
     throw error;
   }
 };
@@ -219,7 +211,6 @@ export const deleteUrl = async (userId, catName, siteName) => {
     
     throw new Error(response.data?.error || 'Failed to delete URL');
   } catch (error) {
-    console.error('Delete URL error:', error);
     throw error;
   }
 };
@@ -243,7 +234,6 @@ export const toggleUrl = async (userId, catName, siteName) => {
     
     throw new Error(response.data?.error || 'Failed to toggle URL');
   } catch (error) {
-    console.error('Toggle URL error:', error);
     throw error;
   }
 };
@@ -261,7 +251,6 @@ export const getCategoriesForSearch = async (userId) => {
     
     return response.data;
   } catch (error) {
-    console.error('Get categories for search error:', error);
     throw error;
   }
 };
@@ -284,7 +273,6 @@ export const uploadIcon = async (iconFile) => {
     
     return response.data;
   } catch (error) {
-    console.error('Upload icon error:', error);
     throw error;
   }
 }; 

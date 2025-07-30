@@ -18,7 +18,7 @@ import { getOrCreateUserId } from '../../utils/getOrCreateUserId';
 
 
 function Home() {
-    console.log('Home component rendering...');
+  
     
     // All hooks must be called at the top level, in the same order every time
     const theme = useMantineTheme();
@@ -55,9 +55,7 @@ function Home() {
     
     // Load first category on mount
     useEffect(() => {
-        console.log('Categories loaded:', categories, 'Selected category:', selectedCategory);
-        if (categories.length > 0 && !selectedCategory) {
-            console.log('Setting first category as selected:', categories[0]);
+            if (categories.length > 0 && !selectedCategory) {
             setSelectedCategory(categories[0]);
         }
     }, [categories, selectedCategory]);
@@ -65,7 +63,6 @@ function Home() {
     // Listen for onboarding completion
     useEffect(() => {
         const handleOnboardingCompleted = () => {
-            console.log('Home: Onboarding completed, state will update automatically');
             // The useUserInitialization hook will handle updating isNewUser state
         };
 
@@ -73,23 +70,13 @@ function Home() {
         return () => window.removeEventListener('onboardingCompleted', handleOnboardingCompleted);
     }, []);
     
-    console.log('Home component state:', { 
-        isDark, 
-        categories: categories.length, 
-        selectedCategory, 
-        userId, 
-        isNewUser, 
-        userLoading, 
-        categoriesLoading,
-        onboardingLoading 
-    });
+
     
     // Debug onboarding state
     debugOnboardingState();
 
     // Event handlers
     const handleCategoryChange = (value) => {
-        console.log('Category changed to:', value);
         setSelectedCategory(value);
         form.setFieldValue('category', value);
         setSearchResults([]);
@@ -105,7 +92,6 @@ function Home() {
 
         // For now, we'll use a simple search simulation
         // In the future, this could be enhanced to search through the API
-        console.log('Searching for:', query, 'in category:', selectedCategory);
         setSearchResults([]);
     };
 
@@ -133,7 +119,7 @@ function Home() {
         zIndex: 1000,
     };
 
-    console.log('Home component rendering JSX...');
+
     
     // Render loading state
     if (userLoading || categoriesLoading) {

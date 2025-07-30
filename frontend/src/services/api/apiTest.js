@@ -35,9 +35,6 @@ export class APITestSuite {
    * Run all API tests
    */
   async runAllTests() {
-    console.log('🧪 Starting API Test Suite...');
-    console.log(`👤 Test User ID: ${this.userId}`);
-    
     try {
       // System & Health APIs
       await this.testHealthEndpoints();
@@ -60,7 +57,6 @@ export class APITestSuite {
       this.printResults();
       
     } catch (error) {
-      console.error('❌ API Test Suite failed:', error);
       this.printResults();
     }
   }
@@ -69,8 +65,6 @@ export class APITestSuite {
    * Test System & Health APIs
    */
   async testHealthEndpoints() {
-    console.log('\n🏥 Testing Health Endpoints...');
-    
     // Test health endpoint
     try {
       const response = await fetch('/health');
@@ -89,8 +83,6 @@ export class APITestSuite {
    * Test User Management APIs
    */
   async testUserManagement() {
-    console.log('\n👤 Testing User Management...');
-    
     // Test user registration
     try {
       const registration = await registerUser(this.userId);
@@ -120,8 +112,6 @@ export class APITestSuite {
    * Test Category Management APIs
    */
   async testCategoryManagement() {
-    console.log('\n📁 Testing Category Management...');
-    
     // Test get user data
     try {
       const userData = await getUserData(this.userId);
@@ -159,8 +149,6 @@ export class APITestSuite {
    * Test URL Management APIs
    */
   async testUrlManagement() {
-    console.log('\n🔗 Testing URL Management...');
-    
     // Test add URL
     try {
       const newUrl = await addUrl(
@@ -216,8 +204,6 @@ export class APITestSuite {
    * Test Utility APIs
    */
   async testUtilityAPIs() {
-    console.log('\n🛠️ Testing Utility APIs...');
-    
     // Test get categories for search
     try {
       const searchCategories = await getCategoriesForSearch(this.userId);
@@ -231,8 +217,6 @@ export class APITestSuite {
    * Cleanup test data
    */
   async cleanup() {
-    console.log('\n🧹 Cleaning up test data...');
-    
     try {
       // Delete test URL
       await deleteUrl(this.userId, 'Updated Test Category', 'Updated Test Site');
@@ -262,40 +246,31 @@ export class APITestSuite {
     });
     
     const status = success ? '✅' : '❌';
-    console.log(`${status} ${testName}`);
-  }
+    }
 
   /**
    * Print test results summary
    */
   printResults() {
-    console.log('\n📊 API Test Results Summary:');
-    console.log('=' .repeat(50));
+    );
     
     const passed = this.testResults.filter(r => r.success).length;
     const failed = this.testResults.filter(r => !r.success).length;
     const total = this.testResults.length;
     
-    console.log(`Total Tests: ${total}`);
-    console.log(`✅ Passed: ${passed}`);
-    console.log(`❌ Failed: ${failed}`);
-    console.log(`📈 Success Rate: ${((passed / total) * 100).toFixed(1)}%`);
+    * 100).toFixed(1)}%`);
     
     if (failed > 0) {
-      console.log('\n❌ Failed Tests:');
       this.testResults
         .filter(r => !r.success)
         .forEach(r => {
-          console.log(`  - ${r.test}: ${r.data.error || 'Unknown error'}`);
-        });
+          });
     }
     
-    console.log('\n📋 Detailed Results:');
     this.testResults.forEach(r => {
       const status = r.success ? '✅' : '❌';
-      console.log(`${status} ${r.test}`);
       if (r.data && Object.keys(r.data).length > 0) {
-        console.log(`   Data: ${JSON.stringify(r.data, null, 2)}`);
+        }`);
       }
     });
   }
