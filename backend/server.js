@@ -81,6 +81,7 @@ const corsOrigins = process.env.CORS_ORIGIN
 // Log CORS configuration for debugging
 console.log('CORS Origins:', corsOrigins);
 console.log('Environment:', process.env.NODE_ENV);
+console.log('Raw CORS_ORIGIN env var:', process.env.CORS_ORIGIN);
 
 const corsOptions = {
   origin: function (origin, callback) {
@@ -174,6 +175,16 @@ app.get('/health', (req, res) => {
   };
 
   res.status(200).json(health);
+});
+
+// CORS test endpoint
+app.get('/api/cors-test', (req, res) => {
+  res.status(200).json({
+    message: 'CORS test successful',
+    corsOrigins: corsOrigins,
+    environment: process.env.NODE_ENV,
+    timestamp: new Date().toISOString()
+  });
 });
 
 // API routes
