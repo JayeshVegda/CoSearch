@@ -91,8 +91,17 @@ const corsOptions = {
         console.log('CORS: Allowing localhost origin in development:', origin);
         callback(null, true);
       } else {
-        console.log('CORS: Origin rejected:', origin);
-        callback(new Error(`Not allowed by CORS. Origin: ${origin}, Allowed: ${corsOrigins.join(', ')}`));
+        // Allow any Vercel subdomain for the main domain
+        const isVercelDomain = origin.includes('vercel.app') && 
+          (origin.includes('co-search-frontend') || origin.includes('co-search-frontend-'));
+        
+        if (isVercelDomain) {
+          console.log('CORS: Allowing Vercel subdomain:', origin);
+          callback(null, true);
+        } else {
+          console.log('CORS: Origin rejected:', origin);
+          callback(new Error(`Not allowed by CORS. Origin: ${origin}, Allowed: ${corsOrigins.join(', ')}`));
+        }
       }
     }
   },
