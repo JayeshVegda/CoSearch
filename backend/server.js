@@ -78,20 +78,33 @@ const corsOrigins = process.env.CORS_ORIGIN
   ? process.env.CORS_ORIGIN.split(',').map(origin => origin.trim())
   : ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002'];
 
+// Log CORS configuration for debugging
+console.log('CORS Origins:', corsOrigins);
+console.log('Environment:', process.env.NODE_ENV);
+
 const corsOptions = {
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) { return callback(null, true); }
+    if (!origin) { 
+      console.log('CORS: Allowing request with no origin');
+      return callback(null, true); 
+    }
+
+    console.log('CORS: Checking origin:', origin);
+    console.log('CORS: Allowed origins:', corsOrigins);
 
     // Check if origin is in our allowed list
     if (corsOrigins.indexOf(origin) !== -1) {
+      console.log('CORS: Origin allowed:', origin);
       callback(null, true);
     } else {
       // For development, allow all localhost origins
       if (process.env.NODE_ENV === 'development' && origin.includes('localhost')) {
+        console.log('CORS: Allowing localhost origin in development:', origin);
         callback(null, true);
       } else {
-        callback(new Error('Not allowed by CORS'));
+        console.log('CORS: Origin rejected:', origin);
+        callback(new Error(`Not allowed by CORS. Origin: ${origin}, Allowed: ${corsOrigins.join(', ')}`));
       }
     }
   },
