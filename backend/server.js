@@ -60,20 +60,7 @@ const limiter = rateLimit({
   skipFailedRequests: false,
 });
 
-// Apply rate limiting to all routes
-app.use('/api/', limiter);
-
-// Additional rate limiting for file uploads
-const uploadLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hour
-  max: 10, // limit each IP to 10 uploads per hour
-  message: {
-    error: 'Too many file uploads from this IP, please try again later.',
-  },
-});
-app.use('/api/setting/icons/upload', uploadLimiter);
-
-// CORS configuration
+// CORS configuration (must come before rate limiting)
 const corsOrigins = process.env.CORS_ORIGIN
   ? process.env.CORS_ORIGIN.split(',').map(origin => origin.trim())
   : ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002'];
@@ -115,6 +102,19 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Origin', 'Accept'],
 };
 app.use(cors(corsOptions));
+
+// Apply rate limiting to all routes (after CORS)
+app.use('/api/', limiter);
+
+// Additional rate limiting for file uploads
+const uploadLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 10, // limit each IP to 10 uploads per hour
+  message: {
+    error: 'Too many file uploads from this IP, please try again later.',
+  },
+});
+app.use('/api/setting/icons/upload', uploadLimiter);
 
 // Body parsing middleware with limits
 app.use(express.json({
