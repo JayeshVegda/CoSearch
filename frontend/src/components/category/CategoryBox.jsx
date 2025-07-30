@@ -12,9 +12,6 @@ function CategoryBox({ data = [], loading = false, onCategoryChange, style = {},
   const selectRef = useRef(null);
   const [isHovering, setIsHovering] = useState(false);
 
-  // Debug logging
-  );
-
   // Safely normalize data to ensure we always have an array of strings
   const normalizedData = React.useMemo(() => {
     // Ensure data is an array
