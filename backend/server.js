@@ -21,6 +21,9 @@ const cleanupService = require('./services/cleanupService');
 const app = express();
 const port = process.env.PORT || 8484;
 
+// Trust proxy for rate limiting behind load balancers (Render, Vercel, etc.)
+app.set('trust proxy', 1);
+
 // Security middleware
 app.use(helmet({
   contentSecurityPolicy: {
