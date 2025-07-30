@@ -197,7 +197,7 @@ export default function UrlListPanel({ selectedCategory, refetchCategories, isLo
     } else if (newUrl.icon && newUrl.icon.url) {
       icon = { public_id: 'local-upload', url: newUrl.icon.url };
     } else {
-      icon = { public_id: 'none', url: '' };
+      icon = { public_id: 'default-icon', url: '/temp/search.png' };
     }
     const payload = {
       siteName,
