@@ -3,15 +3,14 @@
   "version": "1.0.0",
   "description": "CoSearch - Customizable Search Engine",
   "private": true,
-  "workspaces": [
-    "frontend",
-    "backend"
-  ],
   "scripts": {
-    "build": "npm install && cd frontend && npm install && npm run build",
+    "build": "cd frontend && npm install && npm run build",
     "dev": "cd frontend && npm run dev",
-    "start": "cd backend && npm start"
+    "preview": "cd frontend && npm run preview"
   },
+  "workspaces": [
+    "frontend"
+  ],
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=8.0.0"
