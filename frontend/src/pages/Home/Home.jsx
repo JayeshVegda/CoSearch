@@ -14,6 +14,7 @@ import { useUserInitialization } from '../../hooks/useUserInitialization';
 import { debugOnboardingState } from '../../utils/onboardingUtils';
 import { useCategoryList } from '../../components/category/CategoryBox.controller';
 import { getOrCreateUserId } from '../../utils/getOrCreateUserId';
+import axiosInstance from '../../lib/axios';
 
 
 
@@ -96,8 +97,43 @@ function Home() {
     };
 
     const handleFormSubmit = (values) => {
-        if (values.query && values.query.trim() !== '') {
-            handleSearch(values.query);
+        if (values.query && values.query.trim() !== '' && selectedCategory) {
+            // Trigger the actual search by calling the search service
+            const performSearch = async () => {
+                try {
+                    const categoryName = typeof selectedCategory === 'string' ? selectedCategory : selectedCategory.categoryName;
+                    const userId = getOrCreateUserId();
+                    
+                    const response = await axiosInstance.post('/user/search', {
+                        userId,
+                        categoryName,
+                        _timestamp: Date.now()
+                    });
+                    
+                    const filteredResults = response.data.filter(site => site.isChecked);
+                    
+                    if (filteredResults.length > 0) {
+                        // Replace {q} with search query in all URLs and open them
+                        filteredResults.forEach((result) => {
+                            const replacedUrl = result.url.replace(/{q}/g, encodeURIComponent(values.query.trim()));
+                            window.open(replacedUrl, '_blank');
+                        });
+                    } else {
+                        alert(`No enabled URLs found in the ${categoryName} category. Please enable some sites in Settings.`);
+                    }
+                } catch (error) {
+                    alert('Failed to perform search. Please try again.');
+                }
+            };
+            
+            performSearch();
+        } else {
+            if (!values.query || values.query.trim() === '') {
+                alert('Please enter a search query.');
+            }
+            if (!selectedCategory) {
+                alert('Please select a category.');
+            }
         }
     };
 
