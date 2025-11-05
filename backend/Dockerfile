@@ -19,9 +19,8 @@ RUN npm ci --only=production
 # Copy source code
 COPY . .
 
-# Install dotenvx and strip .env files from the final image
+# Install dotenvx for runtime environment variable handling
 RUN curl -fsS https://dotenvx.sh | sh
-RUN dotenvx ext prebuild
 
 # Create logs directory
 RUN mkdir -p logs
@@ -33,5 +32,7 @@ EXPOSE 8484
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD node -e "require('http').get('http://localhost:8484/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"
 
-# Start the application via dotenvx runner (still uses environment variables, not .env)
-CMD ["dotenvx", "run", "--", "npm", "start"]
+# Start the application
+# Note: dotenvx is installed but not needed in CMD since server.js skips .env loading in production
+# and Render provides environment variables directly
+CMD ["npm", "start"]
