@@ -3,6 +3,10 @@ FROM node:18-alpine
 # Set working directory
 WORKDIR /app
 
+# Set production environment inside the container
+ENV NODE_ENV=production
+ENV PORT=8484
+
 # Copy package files
 COPY package*.json ./
 
