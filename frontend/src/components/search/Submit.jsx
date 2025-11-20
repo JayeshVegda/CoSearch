@@ -47,7 +47,7 @@ function Submit({ searchResults, searchQuery, style = {}, onSearch, type = "butt
         });
         
         const filteredResults = filterSiteUrls(response.data);
-        :', filteredResults);
+        console.log('Filtered results:', filteredResults);
         
         if (filteredResults.length > 0) {
           // Replace {q} with search query in all URLs and open them
