@@ -19,6 +19,10 @@
 
 </div>
 
+
+https://github.com/user-attachments/assets/d67de1d2-6b11-4329-8d80-c0fd5d0c3cc6
+
+
 ---
 
 ## 📖 About
@@ -44,11 +48,7 @@ CoSearch is a customizable multi-engine search aggregator that lets you search a
 3. **Organize:** Add custom categories and upload icons for search engines
 4. **Theme:** Toggle between light and dark mode using the theme button
 ---
-## 📽️ Demo
 
-https://github.com/user-attachments/assets/d67de1d2-6b11-4329-8d80-c0fd5d0c3cc6
-
----
 ## 🚀 Quick Start
 
 ### Prerequisites
